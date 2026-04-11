@@ -1,7 +1,7 @@
-# 🏭 AutoLine Systems
+# 🏭 AutoLine MotorWorks
 ### Car Manufacturing Production & Quality Management Platform
 
-AutoLine Systems is a full-stack web application built to digitize and 
+AutoLine MotorWorks is a full-stack web application built to digitize and 
 streamline factory floor operations for a car manufacturing plant. 
 Designed as a Database Systems course project, it bridges a React-powered 
 frontend with a Node.js/Express REST API backend connected to an Oracle 
@@ -82,10 +82,13 @@ npm run dev           # Runs on http://localhost:5173
 ---
 
 ## 👤 Default Login
-| Role     | Username | Password     |
-|----------|----------|--------------|
-| Admin    | admin    | admin        |
-| Operator | user1    | password123  |
+| Role       | Username    | Password     |
+|------------|-------------|--------------|
+| Admin      | admin       | admin        |
+| Manager    | manager     | manager      |
+| Supervisor | supervisor1 | super        |
+| Inspector  | inspector1  | inspect      |
+| Operator   | user1       | password     |
 
 ---
 
