@@ -8,7 +8,14 @@ async function getConnection() {
         driver: sqlite3.Database
     });
 
+    let inTransaction = false;
+
     return {
+        /** Starts a real SQLite transaction; pair with commit() / rollback(). */
+        begin: async () => {
+            await db.exec('BEGIN');
+            inTransaction = true;
+        },
         execute: async (query, binds = {}, options = {}) => {
             let sqliteQuery = query;
             const sqliteBinds = {};
@@ -50,9 +57,19 @@ async function getConnection() {
                 throw error;
             }
         },
-        commit: async () => {}, // Mock commit
-        rollback: async () => {}, // Mock rollback
+        commit: async () => {
+            if (!inTransaction) return;
+            await db.exec('COMMIT');
+            inTransaction = false;
+        },
+        rollback: async () => {
+            if (!inTransaction) return;
+            await db.exec('ROLLBACK');
+            inTransaction = false;
+        },
         close: async () => {
+            // Never leave a half-applied transaction behind
+            if (inTransaction) await db.exec('ROLLBACK');
             await db.close();
         }
     };

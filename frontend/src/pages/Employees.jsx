@@ -1,11 +1,12 @@
 import { useState, useEffect, useCallback } from 'react';
 import { Search, X, PlusCircle, Pencil, Check, Ban } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '../context/auth';
 import PageHeader     from '../components/PageHeader';
 import LoadingSpinner from '../components/LoadingSpinner';
 import ErrorAlert     from '../components/ErrorAlert';
-import { getEmployees, getDropdownLines, postEmployee, putEmployee } from '../services/api';
+import { getEmployees, getDropdownLines, postEmployee, putEmployee, getErrorMessage } from '../services/api';
+import { useLoadOnChange } from '../hooks/useLoadOnChange';
 
 const EMPTY_FORM = {
   employee_name: '', employee_code: '', designation: '',
@@ -44,13 +45,13 @@ export default function Employees() {
       const res = await getEmployees(q);
       setRows(res.data);
     } catch (e) {
-      setError(e.message);
+      setError(getErrorMessage(e));
     } finally {
       setLoading(false);
     }
   }, []);
 
-  useEffect(() => { fetchRows(); }, [fetchRows]);
+  useLoadOnChange(fetchRows);
   useEffect(() => {
     getDropdownLines().then(r => setLines(r.data)).catch(() => {});
   }, []);
@@ -81,7 +82,7 @@ export default function Employees() {
       setForm(EMPTY_FORM);
       fetchRows(search);
     } catch (e) {
-      showToast(e.response?.data?.error || e.message, 'error');
+      showToast(getErrorMessage(e), 'error');
     } finally {
       setSubmitting(false);
     }
@@ -117,7 +118,7 @@ export default function Employees() {
       setEditId(null);
       fetchRows(search);
     } catch (e) {
-      showToast(e.response?.data?.error || e.message, 'error');
+      showToast(getErrorMessage(e), 'error');
     } finally {
       setSaving(false);
     }
@@ -129,7 +130,7 @@ export default function Employees() {
   return (
     <div className="space-y-4 my-10">
       {toast && (
-        <div className={`toast-shell fixed top-4 right-4 z-50 px-4 py-3 rounded-lg text-sm text-white flex items-center gap-3 ${toast.type === 'error' ? 'bg-[rgba(244,107,107,0.86)]' : 'bg-[rgba(255, 0, 51,0.86)]'}`}>
+        <div className={`toast-shell fixed top-4 right-4 z-50 px-4 py-3 rounded-lg text-sm text-white flex items-center gap-3 ${toast.type === 'error' ? 'bg-[rgba(255,0,0,0.86)]' : 'bg-[rgba(255, 0, 0,0.86)]'}`}>
           {toast.msg}
           <button onClick={() => setToast(null)}><X size={14} /></button>
         </div>
@@ -157,67 +158,67 @@ export default function Employees() {
           <h2 className="font-semibold text-[#F3F4F4] mb-4 industrial-heading tracking-[0.12em]">New Employee</h2>
           <form onSubmit={handleSubmit} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             <div>
-              <label className="block text-xs font-medium text-gray-600 mb-1">Name *</label>
+              <label className="block text-xs font-medium text-neutral-400 mb-1">Name *</label>
               <input required value={form.employee_name}
                 onChange={e => setForm(f => ({ ...f, employee_name: e.target.value }))}
                 placeholder="Full name"
-                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
+                className="w-full border border-red-900/40 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-cyan-400"
               />
             </div>
             <div>
-              <label className="block text-xs font-medium text-gray-600 mb-1">Employee Code *</label>
+              <label className="block text-xs font-medium text-neutral-400 mb-1">Employee Code *</label>
               <input required value={form.employee_code}
                 onChange={e => setForm(f => ({ ...f, employee_code: e.target.value }))}
                 placeholder="e.g. EMP001"
-                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
+                className="w-full border border-red-900/40 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-cyan-400"
               />
             </div>
             <div>
-              <label className="block text-xs font-medium text-gray-600 mb-1">Designation</label>
+              <label className="block text-xs font-medium text-neutral-400 mb-1">Designation</label>
               <input value={form.designation}
                 onChange={e => setForm(f => ({ ...f, designation: e.target.value }))}
                 placeholder="e.g. Supervisor"
-                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
+                className="w-full border border-red-900/40 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-cyan-400"
               />
             </div>
             <div>
-              <label className="block text-xs font-medium text-gray-600 mb-1">Line</label>
+              <label className="block text-xs font-medium text-neutral-400 mb-1">Line</label>
               <select value={form.line_id}
                 onChange={e => setForm(f => ({ ...f, line_id: e.target.value }))}
-                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
+                className="w-full border border-red-900/40 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-cyan-400"
               >
                 <option value="">Select line…</option>
                 {lines.map(l => <option key={l[0]} value={l[0]}>{l[1]}</option>)}
               </select>
             </div>
             <div>
-              <label className="block text-xs font-medium text-gray-600 mb-1">Email</label>
+              <label className="block text-xs font-medium text-neutral-400 mb-1">Email</label>
               <input type="email" value={form.email}
                 onChange={e => setForm(f => ({ ...f, email: e.target.value }))}
                 placeholder="email@factory.com"
-                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
+                className="w-full border border-red-900/40 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-cyan-400"
               />
             </div>
             <div>
-              <label className="block text-xs font-medium text-gray-600 mb-1">Phone</label>
+              <label className="block text-xs font-medium text-neutral-400 mb-1">Phone</label>
               <input value={form.phone}
                 onChange={e => setForm(f => ({ ...f, phone: e.target.value }))}
                 placeholder="+91 9999999999"
-                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
+                className="w-full border border-red-900/40 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-cyan-400"
               />
             </div>
             <div>
-              <label className="block text-xs font-medium text-gray-600 mb-1">Joining Date</label>
+              <label className="block text-xs font-medium text-neutral-400 mb-1">Joining Date</label>
               <input type="date" value={form.joining_date}
                 onChange={e => setForm(f => ({ ...f, joining_date: e.target.value }))}
-                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
+                className="w-full border border-red-900/40 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-cyan-400"
               />
             </div>
             <div>
-              <label className="block text-xs font-medium text-gray-600 mb-1">Active</label>
+              <label className="block text-xs font-medium text-neutral-400 mb-1">Active</label>
               <select value={form.is_active}
                 onChange={e => setForm(f => ({ ...f, is_active: e.target.value }))}
-                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
+                className="w-full border border-red-900/40 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-cyan-400"
               >
                 <option value="Y">Yes</option>
                 <option value="N">No</option>
@@ -225,7 +226,7 @@ export default function Employees() {
             </div>
             <div className="sm:col-span-2 lg:col-span-3 flex justify-end">
               <button type="submit" disabled={submitting}
-                className="px-6 py-2 bg-blue-600 text-white text-sm rounded-lg hover:bg-blue-700 disabled:opacity-50 transition"
+                className="px-6 py-2 bg-cyan-600 text-white text-sm rounded-lg hover:bg-cyan-700 disabled:opacity-50 transition"
               >
                 {submitting ? 'Saving…' : 'Save Employee'}
               </button>
@@ -238,7 +239,7 @@ export default function Employees() {
       <div className="toolbar-shell p-4">
         <div className="flex items-center gap-3">
           <div className="relative flex-1 max-w-xs">
-            <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+            <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-neutral-400" />
             <input value={search} onChange={handleSearch} placeholder="Search by name…"
               className="w-full pl-9 pr-3 py-2 text-sm"
             />
@@ -261,20 +262,20 @@ export default function Employees() {
           <div className="overflow-x-auto">
             <table className="w-full text-sm data-table">
               <thead>
-                <tr className="bg-gray-50 border-b border-gray-200">
+                <tr className="bg-[#0a0a0a] border-b border-red-900/40">
                   {['ID', 'Name', 'Code', 'Designation', 'Email', 'Phone', 'Status', 'Actions'].map(h => (
-                    <th key={h} className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wide whitespace-nowrap">{h}</th>
+                    <th key={h} className="px-4 py-3 text-left text-xs font-semibold text-neutral-500 uppercase tracking-wide whitespace-nowrap">{h}</th>
                   ))}
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-100">
+              <tbody className="divide-y divide-red-900/30">
                 {rows.length === 0 ? (
-                  <tr><td colSpan={8} className="px-4 py-10 text-center text-gray-400">No employees found.</td></tr>
+                  <tr><td colSpan={8} className="px-4 py-10 text-center text-neutral-400">No employees found.</td></tr>
                 ) : rows.map((r, i) => {
                   const isEditing = editId === r[0];
                   return (
-                    <tr key={i} className={`transition-colors ${isEditing ? 'bg-blue-50' : 'hover:bg-gray-50'}`}>
-                      <td className="px-4 py-2 font-mono text-xs text-gray-400">{r[0]}</td>
+                    <tr key={i} className={`transition-colors ${isEditing ? 'bg-cyan-950/40' : 'hover:bg-[#0a0a0a]'}`}>
+                      <td className="px-4 py-2 font-mono text-xs text-neutral-400">{r[0]}</td>
 
                       {isEditing ? (
                         <>
@@ -296,7 +297,7 @@ export default function Employees() {
                                 <Check size={12} /> {saving ? '…' : 'Save'}
                               </button>
                               <button onClick={cancelEdit}
-                                className="flex items-center gap-1 px-2 py-1 bg-gray-200 text-gray-600 text-xs rounded-lg hover:bg-gray-300 transition">
+                                className="flex items-center gap-1 px-2 py-1 bg-[#141414] text-neutral-400 text-xs rounded-lg hover:bg-[#141414] transition">
                                 <Ban size={12} /> Cancel
                               </button>
                             </div>
@@ -304,20 +305,20 @@ export default function Employees() {
                         </>
                       ) : (
                         <>
-                          <td className="px-4 py-3 font-medium text-gray-800">{r[1]}</td>
-                          <td className="px-4 py-3 font-mono text-xs text-gray-500">{r[2]}</td>
-                          <td className="px-4 py-3 text-gray-600">{r[3] || '—'}</td>
-                          <td className="px-4 py-3 text-gray-600">{r[5] || '—'}</td>
-                          <td className="px-4 py-3 text-gray-600">{r[6] || '—'}</td>
+                          <td className="px-4 py-3 font-medium text-white">{r[1]}</td>
+                          <td className="px-4 py-3 font-mono text-xs text-neutral-500">{r[2]}</td>
+                          <td className="px-4 py-3 text-neutral-400">{r[3] || '—'}</td>
+                          <td className="px-4 py-3 text-neutral-400">{r[5] || '—'}</td>
+                          <td className="px-4 py-3 text-neutral-400">{r[6] || '—'}</td>
                           <td className="px-4 py-3">
-                            <span className={`px-2 py-0.5 rounded-full text-xs font-semibold ${r[8] === 'Y' ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-500'}`}>
+                            <span className={`px-2 py-0.5 rounded-full text-xs font-semibold ${r[8] === 'Y' ? 'bg-green-950/40 text-green-400' : 'bg-[#0a0a0a] text-neutral-500'}`}>
                               {r[8] === 'Y' ? 'Active' : 'Inactive'}
                             </span>
                           </td>
                           <td className="px-4 py-3">
                             {can('canEdit') && (
                             <button onClick={() => startEdit(r)}
-                              className="flex items-center gap-1 px-2 py-1 border border-gray-300 text-gray-600 text-xs rounded-lg hover:bg-gray-100 transition">
+                              className="flex items-center gap-1 px-2 py-1 border border-red-900/40 text-neutral-400 text-xs rounded-lg hover:bg-[#0a0a0a] transition">
                               <Pencil size={12} /> Edit
                             </button>
                             )}

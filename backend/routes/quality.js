@@ -1,3 +1,4 @@
+const { sendServerError } = require('../utils/http');
     const express = require("express")
     const {getConnection} = require('../db');
     const Qualityrouter = express.Router()
@@ -17,8 +18,7 @@
             await connection.close();
         }
         catch(err) {
-            console.log("Error while inserting into quality_testing", err);
-            res.status(500).json({ error: err.message }); 
+            sendServerError(res, 'Error while inserting into quality_testing', err); 
             
         }
 
@@ -31,7 +31,7 @@
             await connection.close();
         }
         catch(err) {
-            console.log("Error getting quality testing data ", err);
+            sendServerError(res, 'Error getting quality testing data', err);
             
         }
     })
@@ -71,7 +71,7 @@ Qualityrouter.get('/qualitytest/summary', async (req, res) => {
     });
 
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    sendServerError(res, 'quality route', err);
   } finally {
     if (connection) await connection.close();
   }

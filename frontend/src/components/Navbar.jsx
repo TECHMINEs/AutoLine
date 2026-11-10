@@ -7,7 +7,7 @@ import {
   UserCircle2,
   X,
 } from 'lucide-react';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '../context/auth';
 import NotificationPanel from './NotificationPanel';
 import RoleBadge from './RoleBadge';
 import { mainNavItems, settingsNavItem } from './navigation';
@@ -46,20 +46,23 @@ export default function Navbar() {
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
-  useEffect(() => {
+  // Close the mobile menu on navigation (state adjusted during render, not in an effect)
+  const [menuPath, setMenuPath] = useState(location.pathname);
+  if (menuPath !== location.pathname) {
+    setMenuPath(location.pathname);
     setMenuOpen(false);
-  }, [location.pathname]);
+  }
 
   return (
     <header className={`navbar-shell ${scrolled ? 'navbar-shell-solid' : ''}`}>
       <div className="navbar-inner">
         <NavLink to="/home" className="navbar-brand">
-          <span className="navbar-brand-mark">
-            <Factory size={20} />
+          <span className="navbar-brand-mark p-1 border border-[#FF0000] bg-black shadow-[0_0_12px_rgba(255,0,0,0.5)]">
+            <img src="/techmines-logo.jpg" alt="TECHMINES logo" className="w-full h-full object-cover" />
           </span>
           <span>
-            <span className="navbar-brand-title">AutoLine</span>
-            <span className="navbar-brand-subtitle">Systems</span>
+            <span className="navbar-brand-title tracking-widest font-mono text-white">Auto<span className="text-[#FF0000]">Line</span></span>
+            <span className="navbar-brand-subtitle text-[10px] text-[#00FFFF] font-mono">PLASMA CORE</span>
           </span>
         </NavLink>
 

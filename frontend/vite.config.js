@@ -8,7 +8,8 @@ export default defineConfig({
     port: 3000,
     proxy: {
       '/api': {
-        target: 'http://localhost:8080',
+        // Override when the API runs elsewhere, e.g. AUTOLINE_API_URL=http://localhost:8090
+        target: process.env.AUTOLINE_API_URL || 'http://localhost:8080',
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, '')
       }

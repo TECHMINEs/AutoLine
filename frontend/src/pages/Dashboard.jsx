@@ -11,7 +11,7 @@ import LoadingSpinner from '../components/LoadingSpinner';
 import ErrorAlert from '../components/ErrorAlert';
 import PageHeader from '../components/PageHeader';
 import {
-  getTotalProduction, getTotalCost, getDefectRate, getProductionTrend,
+  getTotalProduction, getTotalCost, getDefectRate, getProductionTrend, getErrorMessage,
 } from '../services/api';
 import {
   Activity,
@@ -21,6 +21,7 @@ import {
   ShieldCheck,
 } from 'lucide-react';
 import Beams from '../components/Beams';
+import { useLoadOnChange } from '../hooks/useLoadOnChange';
 
 export default function Dashboard() {
   const [stats, setStats] = useState(null);
@@ -44,13 +45,13 @@ export default function Dashboard() {
         trend: trend.data,
       });
     } catch (e) {
-      setError(e.message);
+      setError(getErrorMessage(e));
     } finally {
       setLoading(false);
     }
   }, []);
 
-  useEffect(() => { fetchAll(); }, [fetchAll]);
+  useLoadOnChange(fetchAll);
 
   const chartData = stats
     ? [
@@ -109,7 +110,7 @@ export default function Dashboard() {
                         rotation={30}
                       />
                     </div>
-        <div className='text-7xl z-20 font-bold self-center my-auto align-middle bg-gradient-to-br from-gray-700 via-white my-auto via-gray-200 via-white via-gray-300 via-white via-gray-200 via-white via-gray-300 via-white bg-clip-text text-transparent'>
+        <div className='text-7xl z-20 font-bold self-center my-auto align-middle bg-gradient-to-br from-neutral-700 via-white my-auto via-neutral-200 via-white via-neutral-300 via-white via-neutral-200 via-white via-neutral-300 via-white bg-clip-text text-transparent'>
         AutoLine Systems
       </div>
         </div>
@@ -162,10 +163,10 @@ export default function Dashboard() {
             <YAxis tick={{ fontSize: 12, fill: 'rgba(243,244,244,0.72)' }} />
             <Tooltip
               contentStyle={{
-                borderRadius: 16,
+                borderRadius: 0,
                 fontSize: 13,
                 background: 'rgba(5,5,5,0.96)',
-                border: '1px solid rgba(255,0,51,0.42)',
+                border: '1px solid rgba(255, 0, 0,0.42)',
                 color: '#F3F4F4',
               }}
               formatter={(v) => [v.toLocaleString('en-IN'), 'Units']}
@@ -174,9 +175,9 @@ export default function Dashboard() {
             <Line
               type="monotone"
               dataKey="units"
-              stroke="#FF0033"
+              stroke="#FF0000"
               strokeWidth={3}
-              dot={{ r: 6, fill: '#FF0033' }}
+              dot={{ r: 6, fill: '#FF0000' }}
               activeDot={{ r: 8, fill: '#F3F4F4' }}
             />
           </LineChart>
@@ -191,12 +192,12 @@ export default function Dashboard() {
         </div>
         <div className="section-card p-5">
           <p className="text-xs text-[rgba(243,244,244,0.6)] font-medium uppercase tracking-[0.18em] mb-1">Today</p>
-          <p className="text-3xl font-bold text-[#FF0033]">{Number(stats.trend.today).toLocaleString('en-IN')}</p>
+          <p className="text-3xl font-bold text-[#FF0000]">{Number(stats.trend.today).toLocaleString('en-IN')}</p>
           <p className="text-xs text-[rgba(243,244,244,0.48)] mt-1">Units produced</p>
         </div>
-        <div className={`section-card p-5 ${trendDir === 'UP' ? 'border-[rgba(103,197,159,0.24)]' : 'border-[rgba(244,107,107,0.24)]'}`}>
+        <div className={`section-card p-5 ${trendDir === 'UP' ? 'border-[rgba(57,255,20,0.24)]' : 'border-[rgba(255,0,0,0.24)]'}`}>
           <p className="text-xs text-[rgba(243,244,244,0.6)] font-medium uppercase tracking-[0.18em] mb-1">Change</p>
-          <p className={`text-3xl font-bold ${trendDir === 'UP' ? 'text-[#9EE2C0]' : 'text-[#FFABAB]'}`}>
+          <p className={`text-3xl font-bold ${trendDir === 'UP' ? 'text-[#39FF14]' : 'text-[#FF0000]'}`}>
             {trendDir === 'UP' ? '+' : '-'}{Math.abs(Number(stats.trend.trend)).toFixed(2)}%
           </p>
           <p className="text-xs text-[rgba(243,244,244,0.48)] mt-1">vs previous day</p>

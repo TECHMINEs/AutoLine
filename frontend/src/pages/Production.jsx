@@ -3,7 +3,9 @@ import { Search, PlusCircle, X, ChevronUp, ChevronDown } from 'lucide-react';
 import PageHeader    from '../components/PageHeader';
 import LoadingSpinner from '../components/LoadingSpinner';
 import ErrorAlert    from '../components/ErrorAlert';
+import { useLoadOnChange } from '../hooks/useLoadOnChange';
 import {
+  getErrorMessage,
   getDailyProduction, postDailyProduction,
   getDropdownLines, getDropdownModels, getEmployees,
 } from '../services/api';
@@ -45,13 +47,13 @@ export default function Production() {
       const res = await getDailyProduction(q);
       setRows(res.data);
     } catch (e) {
-      setError(e.message);
+      setError(getErrorMessage(e));
     } finally {
       setLoading(false);
     }
   }, []);
 
-  useEffect(() => { fetchRows(); }, [fetchRows]);
+  useLoadOnChange(fetchRows);
 
   // Load dropdown data
   useEffect(() => {
@@ -95,7 +97,7 @@ export default function Production() {
       setForm(EMPTY_FORM);
       fetchRows(search);
     } catch (e) {
-      showToast(e.response?.data?.error || e.message, 'error');
+      showToast(getErrorMessage(e), 'error');
     } finally {
       setSubmitting(false);
     }
@@ -119,7 +121,7 @@ export default function Production() {
   return (
     <div className="space-y-4 mt-10">
       {toast && (
-        <div className={`toast-shell fixed top-4 right-4 z-50 px-4 py-3 rounded-lg text-sm text-white flex items-center gap-3 ${toast.type === 'error' ? 'bg-[rgba(244,107,107,0.86)]' : 'bg-[rgba(255, 0, 51,0.86)]'}`}>
+        <div className={`toast-shell fixed top-4 right-4 z-50 px-4 py-3 rounded-lg text-sm text-white flex items-center gap-3 ${toast.type === 'error' ? 'bg-[rgba(255,0,0,0.86)]' : 'bg-[rgba(255, 0, 0,0.86)]'}`}>
           {toast.msg}
           <button onClick={() => setToast(null)}><X size={14} /></button>
         </div>
@@ -141,14 +143,14 @@ export default function Production() {
           <h2 className="font-semibold text-[#F3F4F4] mb-4 industrial-heading tracking-[0.12em]">New Production Entry</h2>
           <form onSubmit={handleSubmit} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             <div>
-              <label className="block text-xs font-medium text-gray-600 mb-1">Date *</label>
+              <label className="block text-xs font-medium text-neutral-400 mb-1">Date *</label>
               <input type="date" required value={form.production_date}
                 onChange={e => setForm(f => ({ ...f, production_date: e.target.value }))}
                 className="px-3 py-2 text-sm"
               />
             </div>
             <div>
-              <label className="block text-xs font-medium text-gray-600 mb-1">Production Line *</label>
+              <label className="block text-xs font-medium text-neutral-400 mb-1">Production Line *</label>
               <select required value={form.line_id}
                 onChange={e => setForm(f => ({ ...f, line_id: e.target.value }))}
                 className="px-3 py-2 text-sm"
@@ -158,7 +160,7 @@ export default function Production() {
               </select>
             </div>
             <div>
-              <label className="block text-xs font-medium text-gray-600 mb-1">Car Model *</label>
+              <label className="block text-xs font-medium text-neutral-400 mb-1">Car Model *</label>
               <select required value={form.model_id}
                 onChange={e => setForm(f => ({ ...f, model_id: e.target.value }))}
                 className="px-3 py-2 text-sm"
@@ -168,7 +170,7 @@ export default function Production() {
               </select>
             </div>
             <div>
-              <label className="block text-xs font-medium text-gray-600 mb-1">Quantity *</label>
+              <label className="block text-xs font-medium text-neutral-400 mb-1">Quantity *</label>
               <input type="number" min={1} required value={form.quantity_produced}
                 onChange={e => setForm(f => ({ ...f, quantity_produced: e.target.value }))}
                 placeholder="e.g. 120"
@@ -176,7 +178,7 @@ export default function Production() {
               />
             </div>
             <div>
-              <label className="block text-xs font-medium text-gray-600 mb-1">Shift *</label>
+              <label className="block text-xs font-medium text-neutral-400 mb-1">Shift *</label>
               <select required value={form.shift}
                 onChange={e => setForm(f => ({ ...f, shift: e.target.value }))}
                 className="px-3 py-2 text-sm"
@@ -186,7 +188,7 @@ export default function Production() {
               </select>
             </div>
             <div>
-              <label className="block text-xs font-medium text-gray-600 mb-1">Supervisor</label>
+              <label className="block text-xs font-medium text-neutral-400 mb-1">Supervisor</label>
               <select value={form.supervisor_id}
                 onChange={e => setForm(f => ({ ...f, supervisor_id: e.target.value }))}
                 className="px-3 py-2 text-sm"
@@ -196,7 +198,7 @@ export default function Production() {
               </select>
             </div>
             <div className="sm:col-span-2 lg:col-span-3">
-              <label className="block text-xs font-medium text-gray-600 mb-1">Notes</label>
+              <label className="block text-xs font-medium text-neutral-400 mb-1">Notes</label>
               <textarea rows={2} value={form.notes}
                 onChange={e => setForm(f => ({ ...f, notes: e.target.value }))}
                 placeholder="Optional notes…"
@@ -218,7 +220,7 @@ export default function Production() {
       <div className="toolbar-shell p-4">
         <div className="flex items-center gap-3">
           <div className="relative flex-1 max-w-xs">
-            <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+            <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-neutral-400" />
             <input
               value={search}
               onChange={handleSearch}
@@ -244,41 +246,41 @@ export default function Production() {
           <div className="overflow-x-auto">
             <table className="w-full text-sm data-table">
               <thead>
-                <tr className="bg-gray-50 border-b border-gray-200">
+                <tr className="bg-[#0a0a0a] border-b border-red-900/40">
                   {COLS.map(c => (
                     <th
                       key={c.idx}
                       onClick={() => handleSort(c.idx)}
-                      className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wide cursor-pointer hover:text-gray-700 select-none whitespace-nowrap"
+                      className="px-4 py-3 text-left text-xs font-semibold text-neutral-500 uppercase tracking-wide cursor-pointer hover:text-neutral-200 select-none whitespace-nowrap"
                     >
                       {c.label}<SortIcon col={c.idx} />
                     </th>
                   ))}
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-100">
+              <tbody className="divide-y divide-red-900/30">
                 {sortedRows.length === 0 ? (
-                  <tr><td colSpan={6} className="px-4 py-10 text-center text-gray-400 text-sm">No records found.</td></tr>
+                  <tr><td colSpan={6} className="px-4 py-10 text-center text-neutral-400 text-sm">No records found.</td></tr>
                 ) : sortedRows.map((row, i) => (
-                  <tr key={i} className="hover:bg-gray-50 transition-colors">
-                    <td className="px-4 py-3 font-mono text-xs text-gray-400">{row[0]}</td>
-                    <td className="px-4 py-3 text-gray-700">
+                  <tr key={i} className="hover:bg-[#0a0a0a] transition-colors">
+                    <td className="px-4 py-3 font-mono text-xs text-neutral-400">{row[0]}</td>
+                    <td className="px-4 py-3 text-neutral-200">
                       {row[1]
                         ? (typeof row[1] === 'string'
                             ? row[1].slice(0, 10)
                             : new Date(row[1]).toLocaleDateString('en-IN'))
                         : '—'}
                     </td>
-                    <td className="px-4 py-3 text-gray-700">{row[2] || '—'}</td>
+                    <td className="px-4 py-3 text-neutral-200">{row[2] || '—'}</td>
                     <td className="px-4 py-3">
-                      <span className="px-2 py-1 bg-blue-50 text-blue-700 rounded-md text-xs font-medium">{row[3] || '—'}</span>
+                      <span className="px-2 py-1 bg-cyan-950/40 text-cyan-400 rounded-md text-xs font-medium">{row[3] || '—'}</span>
                     </td>
-                    <td className="px-4 py-3 font-semibold text-gray-800">{Number(row[4]).toLocaleString('en-IN')}</td>
+                    <td className="px-4 py-3 font-semibold text-white">{Number(row[4]).toLocaleString('en-IN')}</td>
                     <td className="px-4 py-3">
                       <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                        row[5] === 'Morning'   ? 'bg-yellow-100 text-yellow-700'
-                        : row[5] === 'Afternoon' ? 'bg-orange-100 text-orange-700'
-                        : 'bg-indigo-100 text-indigo-700'
+                        row[5] === 'Morning'   ? 'bg-yellow-950/40 text-yellow-400'
+                        : row[5] === 'Afternoon' ? 'bg-orange-950/40 text-orange-400'
+                        : 'bg-cyan-950/40 text-cyan-400'
                       }`}>{row[5]}</span>
                     </td>
                   </tr>

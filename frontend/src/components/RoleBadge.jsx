@@ -1,10 +1,10 @@
-import { useAuth, ROLES } from '../context/AuthContext';
+import { useAuth, ROLES } from '../context/auth';
 import { ShieldCheck, Briefcase, HardHat } from 'lucide-react';
 
 const CONFIG = {
-  [ROLES.ADMIN]: { label: 'Admin', icon: ShieldCheck, cls: 'bg-[rgba(255, 0, 51,0.2)] text-[#FF0033] border border-[rgba(255, 0, 51,0.22)]' },
-  [ROLES.MANAGER]: { label: 'Manager', icon: Briefcase, cls: 'bg-[rgba(156,163,255,0.16)] text-[#C6CAFF] border border-[rgba(156,163,255,0.22)]' },
-  [ROLES.OPERATOR]: { label: 'Operator', icon: HardHat, cls: 'bg-[rgba(240,187,98,0.16)] text-[#FFD796] border border-[rgba(240,187,98,0.22)]' },
+  [ROLES.ADMIN]: { label: 'Admin', icon: ShieldCheck, cls: 'bg-[rgba(255, 0, 0,0.2)] text-[#FF0000] border border-[rgba(255, 0, 0,0.22)]' },
+  [ROLES.MANAGER]: { label: 'Manager', icon: Briefcase, cls: 'bg-[rgba(0,255,255,0.16)] text-[#00FFFF] border border-[rgba(0,255,255,0.22)]' },
+  [ROLES.OPERATOR]: { label: 'Operator', icon: HardHat, cls: 'bg-[rgba(255,95,31,0.16)] text-[#FF5F1F] border border-[rgba(255,95,31,0.22)]' },
 };
 
 export default function RoleBadge() {

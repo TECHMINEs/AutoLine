@@ -1,3 +1,4 @@
+const { sendServerError } = require('../utils/http');
 const {getConnection} = require('../db');
  
 const express = require("express")
@@ -22,7 +23,7 @@ dashboardRouter.get('/total-production', async (req, res) => {
         });
 
     } catch (err) {
-        res.status(500).json({ error: err.message });
+        sendServerError(res, 'dashboard route', err);
     } finally {
         if (connection) await connection.close();
     }
@@ -45,7 +46,7 @@ dashboardRouter.get('/total-cost', async (req, res) => {
         });
 
     } catch (err) {
-        res.status(500).json({ error: err.message });
+        sendServerError(res, 'dashboard route', err);
     } finally {
         if (connection) await connection.close();
     }
@@ -68,7 +69,7 @@ dashboardRouter.get('/defect-rate', async (req, res) => {
         });
 
     } catch (err) {
-        res.status(500).json({ error: err.message });
+        sendServerError(res, 'dashboard route', err);
     } finally {
         if (connection) await connection.close();
     }
@@ -106,7 +107,7 @@ dashboardRouter.get('/production-trend', async (req, res) => {
         });
 
     } catch (err) {
-        res.status(500).json({ error: err.message });
+        sendServerError(res, 'dashboard route', err);
     } finally {
         if (connection) await connection.close();
     }

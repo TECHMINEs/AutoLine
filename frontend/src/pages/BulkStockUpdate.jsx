@@ -1,8 +1,9 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { RefreshCw, Search, Plus, Minus, Settings, X, CheckCircle2 } from 'lucide-react';
 import PageHeader    from '../components/PageHeader';
 import LoadingSpinner from '../components/LoadingSpinner';
-import { getParts, bulkUpdateParts } from '../services/api';
+import { getParts, bulkUpdateParts, getErrorMessage } from '../services/api';
+import { useLoadOnChange } from '../hooks/useLoadOnChange';
 
 // Parts row: [0:PART_ID, 1:PART_NAME, 2:PART_CODE, 3:PART_CATEGORY, 4:UNIT_PRICE, 5:STOCK_QTY, 6:MIN_STOCK, ...]
 
@@ -12,9 +13,9 @@ const OP_ICONS = {
   SET:      <Settings size={13} />,
 };
 const OP_COLORS = {
-  ADD:      'bg-green-100 text-green-700 border-green-300',
-  SUBTRACT: 'bg-red-100   text-red-700   border-red-300',
-  SET:      'bg-yellow-100 text-yellow-700 border-yellow-300',
+  ADD:      'bg-green-950/40 text-green-400 border-green-500/40',
+  SUBTRACT: 'bg-red-950/40   text-red-400   border-red-500/40',
+  SET:      'bg-yellow-950/40 text-yellow-400 border-yellow-500/40',
 };
 
 export default function BulkStockUpdate() {
@@ -26,12 +27,12 @@ export default function BulkStockUpdate() {
   const [submitting, setSubmitting] = useState(false);
   const [toast,      setToast]      = useState(null);
 
-  const showToast = (msg, type = 'success') => {
+  const showToast = useCallback((msg, type = 'success') => {
     setToast({ msg, type });
     setTimeout(() => setToast(null), 4000);
-  };
+  }, []);
 
-  const fetchParts = async () => {
+  const fetchParts = useCallback(async () => {
     setLoading(true);
     try {
       const r = await getParts();
@@ -41,9 +42,9 @@ export default function BulkStockUpdate() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [showToast]);
 
-  useEffect(() => { fetchParts(); }, []);
+  useLoadOnChange(fetchParts);
 
   const filtered = parts.filter(p =>
     !search ||
@@ -96,7 +97,7 @@ export default function BulkStockUpdate() {
       setUpdates({});
       fetchParts();
     } catch (e) {
-      showToast(e.response?.data?.error || e.message, 'error');
+      showToast(getErrorMessage(e), 'error');
     } finally {
       setSubmitting(false);
     }
@@ -105,7 +106,7 @@ export default function BulkStockUpdate() {
   return (
     <div className="space-y-5 mt-10">
       {toast && (
-        <div className={`toast-shell fixed top-4 right-4 z-50 px-4 py-3 rounded-lg text-sm text-white flex items-center gap-3 ${toast.type === 'error' ? 'bg-[rgba(244,107,107,0.86)]' : 'bg-[rgba(255, 0, 51,0.86)]'}`}>
+        <div className={`toast-shell fixed top-4 right-4 z-50 px-4 py-3 rounded-lg text-sm text-white flex items-center gap-3 ${toast.type === 'error' ? 'bg-[rgba(255,0,0,0.86)]' : 'bg-[rgba(255, 0, 0,0.86)]'}`}>
           {toast.msg}
           <button onClick={() => setToast(null)}><X size={14}/></button>
         </div>
@@ -116,7 +117,7 @@ export default function BulkStockUpdate() {
       {/* ─── Pending Banner ─── */}
       {pendingList.length > 0 && (
         <div className="section-card px-5 py-3 flex items-center justify-between">
-          <div className="flex items-center gap-2 text-[#FF0033] text-sm font-medium">
+          <div className="flex items-center gap-2 text-[#FF0000] text-sm font-medium">
             <CheckCircle2 size={16} />
             {pendingList.length} part(s) staged for update
           </div>
@@ -134,7 +135,7 @@ export default function BulkStockUpdate() {
       {/* ─── Toolbar ─── */}
       <div className="toolbar-shell p-4 flex items-center gap-3">
         <div className="relative flex-1 max-w-xs">
-          <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+          <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-neutral-400" />
           <input
             value={search}
             onChange={e => setSearch(e.target.value)}
@@ -163,19 +164,19 @@ export default function BulkStockUpdate() {
           <div className="overflow-x-auto">
             <table className="w-full text-sm data-table">
               <thead>
-                <tr className="bg-gray-50 border-b border-gray-200">
-                  <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Part</th>
-                  <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Category</th>
-                  <th className="px-4 py-3 text-center text-xs font-semibold text-gray-500 uppercase">Current Stock</th>
-                  <th className="px-4 py-3 text-center text-xs font-semibold text-gray-500 uppercase">Operation</th>
-                  <th className="px-4 py-3 text-center text-xs font-semibold text-gray-500 uppercase">Quantity</th>
-                  <th className="px-4 py-3 text-center text-xs font-semibold text-gray-500 uppercase">Preview</th>
-                  <th className="px-4 py-3 text-center text-xs font-semibold text-gray-500 uppercase">Clear</th>
+                <tr className="bg-[#0a0a0a] border-b border-red-900/40">
+                  <th className="px-4 py-3 text-left text-xs font-semibold text-neutral-500 uppercase">Part</th>
+                  <th className="px-4 py-3 text-left text-xs font-semibold text-neutral-500 uppercase">Category</th>
+                  <th className="px-4 py-3 text-center text-xs font-semibold text-neutral-500 uppercase">Current Stock</th>
+                  <th className="px-4 py-3 text-center text-xs font-semibold text-neutral-500 uppercase">Operation</th>
+                  <th className="px-4 py-3 text-center text-xs font-semibold text-neutral-500 uppercase">Quantity</th>
+                  <th className="px-4 py-3 text-center text-xs font-semibold text-neutral-500 uppercase">Preview</th>
+                  <th className="px-4 py-3 text-center text-xs font-semibold text-neutral-500 uppercase">Clear</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-100">
+              <tbody className="divide-y divide-red-900/30">
                 {filtered.length === 0 ? (
-                  <tr><td colSpan={7} className="px-4 py-10 text-center text-gray-400">No parts found.</td></tr>
+                  <tr><td colSpan={7} className="px-4 py-10 text-center text-neutral-400">No parts found.</td></tr>
                 ) : filtered.map(p => {
                   const pid      = p[0];
                   const upd      = updates[pid];
@@ -183,15 +184,15 @@ export default function BulkStockUpdate() {
                   const hasUpdate = upd && upd.type;
 
                   return (
-                    <tr key={pid} className={`transition-colors ${hasUpdate ? 'bg-blue-50' : 'hover:bg-gray-50'}`}>
+                    <tr key={pid} className={`transition-colors ${hasUpdate ? 'bg-cyan-950/40' : 'hover:bg-[#0a0a0a]'}`}>
                       <td className="px-4 py-3">
-                        <p className="font-medium text-gray-100">{p[1]}</p>
-                        <p className="text-xs text-gray-400">{p[2]}</p>
+                        <p className="font-medium text-neutral-100">{p[1]}</p>
+                        <p className="text-xs text-neutral-400">{p[2]}</p>
                       </td>
                       <td className="px-4 py-3">
-                        <span className="px-2 py-0.5 bg-purple-50 text-black font-bold rounded text-xs">{p[3]}</span>
+                        <span className="px-2 py-0.5 bg-orange-950/40 text-black font-bold rounded text-xs">{p[3]}</span>
                       </td>
-                      <td className="px-4 py-3 text-center font-semibold text-gray-700">
+                      <td className="px-4 py-3 text-center font-semibold text-neutral-200">
                         {Number(p[5]).toLocaleString('en-IN')}
                         {p[5] < p[6] && p[5] > 0 && <span className="ml-1 text-yellow-500 text-xs">(LOW)</span>}
                         {p[5] === 0 && <span className="ml-1 text-red-500 text-xs">(OUT)</span>}
@@ -207,7 +208,7 @@ export default function BulkStockUpdate() {
                               className={`flex items-center gap-1 px-2 py-1 rounded-md text-xs font-medium border transition ${
                                 upd?.type === op
                                   ? OP_COLORS[op] + ' ring-1 ring-offset-1 ring-current'
-                                  : 'border-gray-200 text-gray-500 hover:border-gray-400'
+                                  : 'border-red-900/40 text-neutral-500 hover:border-red-900/40'
                               }`}
                             >
                               {OP_ICONS[op]} {op}
@@ -235,7 +236,7 @@ export default function BulkStockUpdate() {
                           <span className={`font-semibold text-sm ${preview < p[6] ? 'text-yellow-600' : preview === 0 ? 'text-red-600' : 'text-green-600'}`}>
                             → {Number(preview).toLocaleString('en-IN')}
                           </span>
-                        ) : <span className="text-gray-300 text-xs">—</span>}
+                        ) : <span className="text-neutral-300 text-xs">—</span>}
                       </td>
 
                       {/* Clear */}
