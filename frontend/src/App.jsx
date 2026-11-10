@@ -1,5 +1,5 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
-import { useAuth } from './context/AuthContext';
+import { useAuth } from './context/auth';
 import Navbar from './components/Navbar';
 import Login from './pages/Login';
 import Home from './pages/Home';
@@ -15,17 +15,19 @@ import Settings from './pages/Settings';
 import Employees from './pages/Employees';
 import Models from './pages/Models';
 import Lines from './pages/Lines';
+import BrandBar from './components/brand/BrandBar';
+import BrandFooter from './components/brand/BrandFooter';
 
 function ProtectedRoute({ children, permission }) {
   const { can } = useAuth();
   if (permission && !can(permission)) {
     return (
       <div className="flex flex-col items-center justify-center h-full gap-3 text-center">
-        <div className="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center">
+        <div className="w-12 h-12 bg-red-950/40 rounded-full flex items-center justify-center">
           <span className="text-red-500 text-xl">!</span>
         </div>
-        <p className="font-semibold text-gray-700">Access Restricted</p>
-        <p className="text-sm text-gray-400">You don't have permission to view this page.</p>
+        <p className="font-semibold text-neutral-200">Access Restricted</p>
+        <p className="text-sm text-neutral-400">You don't have permission to view this page.</p>
       </div>
     );
   }
@@ -35,10 +37,21 @@ function ProtectedRoute({ children, permission }) {
 export default function App() {
   const { user } = useAuth();
 
-  if (!user) return <Login />;
+  if (!user) {
+    return (
+      <div className="min-h-screen bg-black flex flex-col">
+        <BrandBar project="AutoLine — Manufacturing Systems" />
+        <div className="flex-1">
+          <Login />
+        </div>
+        <BrandFooter />
+      </div>
+    );
+  }
 
   return (
-    <div className="app-shell">
+    <div className="app-shell bg-black flex flex-col">
+      <BrandBar project="AutoLine — Manufacturing Systems" />
       <Navbar />
       <main className="app-main">
         <div className="app-content">
@@ -80,6 +93,7 @@ export default function App() {
           </Routes>
         </div>
       </main>
+      <BrandFooter />
     </div>
   );
 }

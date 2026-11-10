@@ -7,7 +7,7 @@ import {
   ShieldCheck,
 } from 'lucide-react';
 import Beams from '../components/Beams';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '../context/auth';
 import { mainNavItems, settingsNavItem } from '../components/navigation';
 
 const featureCards = [

@@ -1,3 +1,4 @@
+const { sendServerError } = require('../utils/http');
 const express = require('express')
 const { getConnection } = require('../db');
 const dropdownRouter = express.Router();
@@ -15,7 +16,7 @@ dropdownRouter.get('/lines', async(req, res)=>{
         res.json(result.rows);
     }
     catch(err) {
-        res.status(500).json({ error: err.message });
+        sendServerError(res, 'dropdown route', err);
     }
     finally {
         if (connection) await connection.close();
@@ -38,7 +39,7 @@ dropdownRouter.get('/models', async (req, res) => {
         res.json(result.rows);
 
     } catch (err) {
-        res.status(500).json({ error: err.message });
+        sendServerError(res, 'dropdown route', err);
     } finally {
         if (connection) await connection.close();
     }

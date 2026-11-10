@@ -3,7 +3,8 @@ import { PlusCircle, X } from 'lucide-react';
 import PageHeader    from '../components/PageHeader';
 import LoadingSpinner from '../components/LoadingSpinner';
 import ErrorAlert    from '../components/ErrorAlert';
-import { getPartsUsage, postPartsUsage, getDropdownLines, getParts } from '../services/api';
+import { getPartsUsage, postPartsUsage, getDropdownLines, getParts, getErrorMessage } from '../services/api';
+import { useLoadOnChange } from '../hooks/useLoadOnChange';
 
 // Usage row: [usage_id, usage_date, part_name, quantity_used, total_cost, line_name]
 
@@ -34,13 +35,13 @@ export default function PartsUsage() {
       const res = await getPartsUsage();
       setRows(res.data);
     } catch (e) {
-      setError(e.message);
+      setError(getErrorMessage(e));
     } finally {
       setLoading(false);
     }
   }, []);
 
-  useEffect(() => { fetchRows(); }, [fetchRows]);
+  useLoadOnChange(fetchRows);
   useEffect(() => {
     getDropdownLines().then(r => setLines(r.data)).catch(() => {});
     getParts().then(r => setParts(r.data)).catch(() => {});
@@ -76,7 +77,7 @@ export default function PartsUsage() {
       setForm(EMPTY);
       fetchRows();
     } catch (e) {
-      showToast(e.response?.data?.error || e.message, 'error');
+      showToast(getErrorMessage(e), 'error');
     } finally {
       setSubmitting(false);
     }
@@ -85,7 +86,7 @@ export default function PartsUsage() {
   return (
     <div className="space-y-4 mt-10">
       {toast && (
-        <div className={`toast-shell fixed top-4 right-4 z-50 px-4 py-3 rounded-lg text-sm text-white flex items-center gap-3 ${toast.type === 'error' ? 'bg-[rgba(244,107,107,0.86)]' : 'bg-[rgba(255, 0, 51,0.86)]'}`}>
+        <div className={`toast-shell fixed top-4 right-4 z-50 px-4 py-3 rounded-lg text-sm text-white flex items-center gap-3 ${toast.type === 'error' ? 'bg-[rgba(255,0,0,0.86)]' : 'bg-[rgba(255, 0, 0,0.86)]'}`}>
           {toast.msg}
           <button onClick={() => setToast(null)}><X size={14} /></button>
         </div>
@@ -106,14 +107,14 @@ export default function PartsUsage() {
           <h2 className="font-semibold text-[#F3F4F4] mb-4 industrial-heading tracking-[0.12em]">New Parts Usage Entry</h2>
           <form onSubmit={handleSubmit} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             <div>
-              <label className="block text-xs font-medium text-gray-600 mb-1">Date *</label>
+              <label className="block text-xs font-medium text-neutral-400 mb-1">Date *</label>
               <input type="date" required value={form.usage_date}
                 onChange={e => setForm(f => ({ ...f, usage_date: e.target.value }))}
                 className="px-3 py-2 text-sm"
               />
             </div>
             <div>
-              <label className="block text-xs font-medium text-gray-600 mb-1">Part *</label>
+              <label className="block text-xs font-medium text-neutral-400 mb-1">Part *</label>
               <select required value={form.part_id}
                 onChange={e => handlePartChange(e.target.value)}
                 className="px-3 py-2 text-sm"
@@ -123,7 +124,7 @@ export default function PartsUsage() {
               </select>
             </div>
             <div>
-              <label className="block text-xs font-medium text-gray-600 mb-1">Line *</label>
+              <label className="block text-xs font-medium text-neutral-400 mb-1">Line *</label>
               <select required value={form.line_id}
                 onChange={e => setForm(f => ({ ...f, line_id: e.target.value }))}
                 className="px-3 py-2 text-sm"
@@ -133,7 +134,7 @@ export default function PartsUsage() {
               </select>
             </div>
             <div>
-              <label className="block text-xs font-medium text-gray-600 mb-1">Quantity Used *</label>
+              <label className="block text-xs font-medium text-neutral-400 mb-1">Quantity Used *</label>
               <input type="number" min={1} required value={form.quantity_used}
                 onChange={e => setForm(f => ({ ...f, quantity_used: e.target.value }))}
                 placeholder="e.g. 50"
@@ -141,7 +142,7 @@ export default function PartsUsage() {
               />
             </div>
             <div>
-              <label className="block text-xs font-medium text-gray-600 mb-1">Unit Price *</label>
+              <label className="block text-xs font-medium text-neutral-400 mb-1">Unit Price *</label>
               <input type="number" min={0} step="0.01" required value={form.unit_price}
                 onChange={e => setForm(f => ({ ...f, unit_price: e.target.value }))}
                 placeholder="Auto-filled from part"
@@ -149,7 +150,7 @@ export default function PartsUsage() {
               />
             </div>
             <div>
-              <label className="block text-xs font-medium text-gray-600 mb-1">Production ID (optional)</label>
+              <label className="block text-xs font-medium text-neutral-400 mb-1">Production ID (optional)</label>
               <input type="number" value={form.production_id}
                 onChange={e => setForm(f => ({ ...f, production_id: e.target.value }))}
                 placeholder="Link to production record"
@@ -159,7 +160,7 @@ export default function PartsUsage() {
 
             {calculatedTotal && (
               <div className="sm:col-span-2 lg:col-span-3">
-                <div className="section-card px-4 py-2 text-sm text-[#FF0033] font-medium">
+                <div className="section-card px-4 py-2 text-sm text-[#FF0000] font-medium">
                   Calculated Total Cost: ₹{Number(calculatedTotal).toLocaleString('en-IN')}
                 </div>
               </div>
@@ -184,26 +185,26 @@ export default function PartsUsage() {
           <div className="overflow-x-auto">
             <table className="w-full text-sm data-table">
               <thead>
-                <tr className="bg-gray-50 border-b border-gray-200">
+                <tr className="bg-[#0a0a0a] border-b border-red-900/40">
                   {['ID', 'Date', 'Part', 'Qty Used', 'Total Cost', 'Line'].map(h => (
-                    <th key={h} className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wide">{h}</th>
+                    <th key={h} className="px-4 py-3 text-left text-xs font-semibold text-neutral-500 uppercase tracking-wide">{h}</th>
                   ))}
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-100">
+              <tbody className="divide-y divide-red-900/30">
                 {rows.length === 0 ? (
-                  <tr><td colSpan={6} className="px-4 py-10 text-center text-gray-400">No usage records found.</td></tr>
+                  <tr><td colSpan={6} className="px-4 py-10 text-center text-neutral-400">No usage records found.</td></tr>
                 ) : rows.map((r, i) => (
-                  <tr key={i} className="hover:bg-gray-50 transition-colors">
-                    <td className="px-4 py-3 font-mono text-xs text-gray-400">{r[0]}</td>
-                    <td className="px-4 py-3 text-gray-700">
+                  <tr key={i} className="hover:bg-[#0a0a0a] transition-colors">
+                    <td className="px-4 py-3 font-mono text-xs text-neutral-400">{r[0]}</td>
+                    <td className="px-4 py-3 text-neutral-200">
                       {r[1] ? (typeof r[1] === 'string' ? r[1].slice(0,10) : new Date(r[1]).toLocaleDateString('en-IN')) : '—'}
                     </td>
-                    <td className="px-4 py-3 font-medium text-gray-800">{r[2]}</td>
-                    <td className="px-4 py-3 text-gray-700">{Number(r[3]).toLocaleString('en-IN')}</td>
-                    <td className="px-4 py-3 font-semibold text-green-700">₹{Number(r[4]).toLocaleString('en-IN')}</td>
+                    <td className="px-4 py-3 font-medium text-white">{r[2]}</td>
+                    <td className="px-4 py-3 text-neutral-200">{Number(r[3]).toLocaleString('en-IN')}</td>
+                    <td className="px-4 py-3 font-semibold text-green-400">₹{Number(r[4]).toLocaleString('en-IN')}</td>
                     <td className="px-4 py-3">
-                      <span className="px-2 py-0.5 bg-blue-50 text-blue-700 rounded-md text-xs font-medium">{r[5]}</span>
+                      <span className="px-2 py-0.5 bg-cyan-950/40 text-cyan-400 rounded-md text-xs font-medium">{r[5]}</span>
                     </td>
                   </tr>
                 ))}

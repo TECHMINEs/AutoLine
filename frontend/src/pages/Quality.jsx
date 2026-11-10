@@ -3,7 +3,9 @@ import { PlusCircle, X, FlaskConical } from 'lucide-react';
 import PageHeader    from '../components/PageHeader';
 import LoadingSpinner from '../components/LoadingSpinner';
 import ErrorAlert    from '../components/ErrorAlert';
+import { useLoadOnChange } from '../hooks/useLoadOnChange';
 import {
+  getErrorMessage,
   getQualityTests, postQualityTest,
   getDropdownLines, getDropdownModels, getEmployees,
 } from '../services/api';
@@ -45,13 +47,13 @@ export default function Quality() {
       const res = await getQualityTests();
       setRows(res.data);
     } catch (e) {
-      setError(e.message);
+      setError(getErrorMessage(e));
     } finally {
       setLoading(false);
     }
   }, []);
 
-  useEffect(() => { fetchTests(); }, [fetchTests]);
+  useLoadOnChange(fetchTests);
   useEffect(() => {
     getDropdownLines().then(r => setLines(r.data)).catch(() => {});
     getDropdownModels().then(r => setModels(r.data)).catch(() => {});
@@ -98,7 +100,7 @@ export default function Quality() {
       setForm(EMPTY);
       fetchTests();
     } catch (e) {
-      showToast(e.response?.data?.error || e.message, 'error');
+      showToast(getErrorMessage(e), 'error');
     } finally {
       setSubmitting(false);
     }
@@ -112,7 +114,7 @@ export default function Quality() {
   return (
     <div className="space-y-5 mt-10">
       {toast && (
-        <div className={`toast-shell fixed top-4 right-4 z-50 px-4 py-3 rounded-lg text-sm text-white flex items-center gap-3 ${toast.type === 'error' ? 'bg-[rgba(244,107,107,0.86)]' : 'bg-[rgba(255, 0, 51,0.86)]'}`}>
+        <div className={`toast-shell fixed top-4 right-4 z-50 px-4 py-3 rounded-lg text-sm text-white flex items-center gap-3 ${toast.type === 'error' ? 'bg-[rgba(255,0,0,0.86)]' : 'bg-[rgba(255, 0, 0,0.86)]'}`}>
           {toast.msg}
           <button onClick={() => setToast(null)}><X size={14} /></button>
         </div>
@@ -132,19 +134,19 @@ export default function Quality() {
       {showForm && (
         <div className="form-shell p-6">
           <div className="flex items-center gap-2 mb-4">
-            <FlaskConical size={18} className="text-[#FF0033]" />
+            <FlaskConical size={18} className="text-[#FF0000]" />
             <h2 className="font-semibold text-[#F3F4F4] industrial-heading tracking-[0.12em]">New Quality Test Entry</h2>
           </div>
           <form onSubmit={handleSubmit} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             <div>
-              <label className="block text-xs font-medium text-gray-600 mb-1">Test Date *</label>
+              <label className="block text-xs font-medium text-neutral-400 mb-1">Test Date *</label>
               <input type="date" required value={form.test_date}
                 onChange={e => setForm(f => ({ ...f, test_date: e.target.value }))}
                 className="px-3 py-2 text-sm"
               />
             </div>
             <div>
-              <label className="block text-xs font-medium text-gray-600 mb-1">Production Line *</label>
+              <label className="block text-xs font-medium text-neutral-400 mb-1">Production Line *</label>
               <select required value={form.line_id}
                 onChange={e => setForm(f => ({ ...f, line_id: e.target.value }))}
                 className="px-3 py-2 text-sm"
@@ -154,7 +156,7 @@ export default function Quality() {
               </select>
             </div>
             <div>
-              <label className="block text-xs font-medium text-gray-600 mb-1">Car Model *</label>
+              <label className="block text-xs font-medium text-neutral-400 mb-1">Car Model *</label>
               <select required value={form.model_id}
                 onChange={e => setForm(f => ({ ...f, model_id: e.target.value }))}
                 className="px-3 py-2 text-sm"
@@ -164,7 +166,7 @@ export default function Quality() {
               </select>
             </div>
             <div>
-              <label className="block text-xs font-medium text-gray-600 mb-1">Cars Tested *</label>
+              <label className="block text-xs font-medium text-neutral-400 mb-1">Cars Tested *</label>
               <input type="number" min={1} required value={form.cars_tested}
                 onChange={e => handleTestedChange(e.target.value)}
                 placeholder="e.g. 100"
@@ -172,7 +174,7 @@ export default function Quality() {
               />
             </div>
             <div>
-              <label className="block text-xs font-medium text-gray-600 mb-1">Cars Passed *</label>
+              <label className="block text-xs font-medium text-neutral-400 mb-1">Cars Passed *</label>
               <input type="number" min={0} required value={form.cars_passed}
                 onChange={e => handlePassedChange(e.target.value)}
                 placeholder="e.g. 95"
@@ -180,7 +182,7 @@ export default function Quality() {
               />
             </div>
             <div>
-              <label className="block text-xs font-medium text-gray-600 mb-1">Cars Failed *</label>
+              <label className="block text-xs font-medium text-neutral-400 mb-1">Cars Failed *</label>
               <input type="number" min={0} required value={form.cars_failed}
                 onChange={e => setForm(f => ({ ...f, cars_failed: e.target.value }))}
                 placeholder="Auto-calculated"
@@ -188,7 +190,7 @@ export default function Quality() {
               />
             </div>
             <div>
-              <label className="block text-xs font-medium text-gray-600 mb-1">Shift *</label>
+              <label className="block text-xs font-medium text-neutral-400 mb-1">Shift *</label>
               <select required value={form.shift}
                 onChange={e => setForm(f => ({ ...f, shift: e.target.value }))}
                 className="px-3 py-2 text-sm"
@@ -198,7 +200,7 @@ export default function Quality() {
               </select>
             </div>
             <div>
-              <label className="block text-xs font-medium text-gray-600 mb-1">Inspector</label>
+              <label className="block text-xs font-medium text-neutral-400 mb-1">Inspector</label>
               <select value={form.inspector_id}
                 onChange={e => setForm(f => ({ ...f, inspector_id: e.target.value }))}
                 className="px-3 py-2 text-sm"
@@ -208,7 +210,7 @@ export default function Quality() {
               </select>
             </div>
             <div>
-              <label className="block text-xs font-medium text-gray-600 mb-1">Production ID (optional)</label>
+              <label className="block text-xs font-medium text-neutral-400 mb-1">Production ID (optional)</label>
               <input type="number" value={form.production_id}
                 onChange={e => setForm(f => ({ ...f, production_id: e.target.value }))}
                 placeholder="Link to production record"
@@ -220,7 +222,7 @@ export default function Quality() {
             {form.cars_tested && form.cars_passed && (
               <div className="sm:col-span-2 lg:col-span-3">
                 <div className={`rounded-lg px-4 py-2.5 text-sm font-medium flex items-center gap-3 ${
-                  passRate(form.cars_passed, form.cars_tested) >= 95 ? 'section-card text-[#9EE2C0]' : 'section-card text-[#FFD796]'
+                  passRate(form.cars_passed, form.cars_tested) >= 95 ? 'section-card text-[#39FF14]' : 'section-card text-[#FF5F1F]'
                 }`}>
                   Pass Rate Preview:&nbsp;<strong>{passRate(form.cars_passed, form.cars_tested)}%</strong>
                   <span className="text-xs font-normal opacity-70">
@@ -231,7 +233,7 @@ export default function Quality() {
             )}
 
             <div className="sm:col-span-2 lg:col-span-3">
-              <label className="block text-xs font-medium text-gray-600 mb-1">Notes</label>
+              <label className="block text-xs font-medium text-neutral-400 mb-1">Notes</label>
               <textarea rows={2} value={form.notes}
                 onChange={e => setForm(f => ({ ...f, notes: e.target.value }))}
                 placeholder="Optional notes…"
@@ -261,45 +263,45 @@ export default function Quality() {
           <div className="overflow-x-auto">
             <table className="w-full text-sm data-table">
               <thead>
-                <tr className="bg-gray-50 border-b border-gray-200">
+                <tr className="bg-[#0a0a0a] border-b border-red-900/40">
                   {['ID', 'Date', 'Line', 'Model', 'Tested', 'Passed', 'Failed', 'Defect %', 'Shift'].map(h => (
-                    <th key={h} className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wide whitespace-nowrap">{h}</th>
+                    <th key={h} className="px-4 py-3 text-left text-xs font-semibold text-neutral-500 uppercase tracking-wide whitespace-nowrap">{h}</th>
                   ))}
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-100">
+              <tbody className="divide-y divide-red-900/30">
                 {rows.length === 0 ? (
-                  <tr><td colSpan={9} className="px-4 py-10 text-center text-gray-400">No quality tests found.</td></tr>
+                  <tr><td colSpan={9} className="px-4 py-10 text-center text-neutral-400">No quality tests found.</td></tr>
                 ) : rows.map((r, i) => {
                   // SELECT * columns: test_id[0], test_date[1], line_id[2], model_id[3],
                   // production_id[4], cars_tested[5], cars_passed[6], cars_failed[7],
                   // defect_percentage[8], inspector_id[9], shift[10], notes[11]
                   const defect = r[8] != null ? Number(r[8]).toFixed(2) : null;
                   return (
-                    <tr key={i} className="hover:bg-gray-50 transition-colors">
-                      <td className="px-4 py-3 font-mono text-xs text-gray-400">{r[0]}</td>
-                      <td className="px-4 py-3 text-gray-700">
+                    <tr key={i} className="hover:bg-[#0a0a0a] transition-colors">
+                      <td className="px-4 py-3 font-mono text-xs text-neutral-400">{r[0]}</td>
+                      <td className="px-4 py-3 text-neutral-200">
                         {r[1] ? (typeof r[1] === 'string' ? r[1].slice(0,10) : new Date(r[1]).toLocaleDateString('en-IN')) : '—'}
                       </td>
-                      <td className="px-4 py-3 text-gray-600">{r[2]}</td>
-                      <td className="px-4 py-3 text-gray-600">{r[3]}</td>
-                      <td className="px-4 py-3 font-medium text-gray-800">{r[5]}</td>
+                      <td className="px-4 py-3 text-neutral-400">{r[2]}</td>
+                      <td className="px-4 py-3 text-neutral-400">{r[3]}</td>
+                      <td className="px-4 py-3 font-medium text-white">{r[5]}</td>
                       <td className="px-4 py-3 text-green-600 font-medium">{r[6]}</td>
                       <td className="px-4 py-3 text-red-500 font-medium">{r[7]}</td>
                       <td className="px-4 py-3">
                         {defect !== null ? (
                           <span className={`px-2 py-0.5 rounded-full text-xs font-semibold ${
-                            Number(defect) > 10 ? 'bg-red-100 text-red-700'
-                            : Number(defect) > 5 ? 'bg-yellow-100 text-yellow-700'
-                            : 'bg-green-100 text-green-700'
+                            Number(defect) > 10 ? 'bg-red-950/40 text-red-400'
+                            : Number(defect) > 5 ? 'bg-yellow-950/40 text-yellow-400'
+                            : 'bg-green-950/40 text-green-400'
                           }`}>{defect}%</span>
                         ) : '—'}
                       </td>
                       <td className="px-4 py-3">
                         <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${
-                          r[10] === 'Morning' ? 'bg-yellow-100 text-yellow-700'
-                          : r[10] === 'Afternoon' ? 'bg-orange-100 text-orange-700'
-                          : 'bg-indigo-100 text-indigo-700'
+                          r[10] === 'Morning' ? 'bg-yellow-950/40 text-yellow-400'
+                          : r[10] === 'Afternoon' ? 'bg-orange-950/40 text-orange-400'
+                          : 'bg-cyan-950/40 text-cyan-400'
                         }`}>{r[10]}</span>
                       </td>
                     </tr>

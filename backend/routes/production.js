@@ -1,3 +1,4 @@
+const { sendServerError } = require('../utils/http');
 const express = require("express")
 
 const {getConnection} = require('../db');
@@ -44,8 +45,7 @@ productionRouter.get('/dailyproduction', async (req,res)=> {
         res.json(result.rows);
     }
     catch(err) {
-        console.log("Error while getting daily production line data");
-        res.status(500).json({ error: err.message }); 
+        sendServerError(res, 'Error while getting daily production line data', err); 
         
     }
 
@@ -90,12 +90,7 @@ productionRouter.post('/dailyproduction', async (req,res)=> {
         })
     }
     catch(err) {
-        console.log("Error while inserting daily production data", err);
-        res.status(500).json({
-            error:err.message
-        })
-        
-    }
+        sendServerError(res, 'Error while inserting daily production data', err);}
    
 })
 

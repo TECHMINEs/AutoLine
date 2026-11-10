@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Factory, Eye, EyeOff } from 'lucide-react';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '../context/auth';
 
 export default function Login() {
   const { login } = useAuth();
@@ -26,7 +26,7 @@ export default function Login() {
     <div className="auth-shell flex items-center justify-center p-4">
       <div className="w-full max-w-sm">
         <div className="text-center mb-8">
-          <div className="w-14 h-14 bg-[#FF0033] rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-[0_18px_36px_rgba(255, 0, 51,0.2)]">
+          <div className="w-14 h-14 bg-[#FF0000] rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-[0_18px_36px_rgba(255, 0, 0,0.2)]">
             <Factory size={28} className="text-white" />
           </div>
           <h1 className="text-2xl font-bold text-white industrial-heading tracking-[0.16em]">AutoLine</h1>
@@ -71,7 +71,7 @@ export default function Login() {
             </div>
 
             {error && (
-              <p className="text-xs text-[#FFABAB] bg-[rgba(244,107,107,0.12)] border border-[rgba(244,107,107,0.22)] rounded-lg px-3 py-2">
+              <p className="text-xs text-[#FF0000] bg-[rgba(255,0,0,0.12)] border border-[rgba(255,0,0,0.22)] rounded-lg px-3 py-2">
                 {error}
               </p>
             )}

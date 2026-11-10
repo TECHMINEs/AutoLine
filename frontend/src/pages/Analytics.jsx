@@ -7,14 +7,15 @@ import { AlertTriangle, TrendingDown, Factory, Car } from 'lucide-react';
 import PageHeader     from '../components/PageHeader';
 import LoadingSpinner from '../components/LoadingSpinner';
 import ErrorAlert     from '../components/ErrorAlert';
-import { getQualitySummary } from '../services/api';
+import { getQualitySummary, getErrorMessage } from '../services/api';
+import { useLoadOnChange } from '../hooks/useLoadOnChange';
 
 const DEFECT_THRESHOLD = 5; // % above which is considered high
 
 const barColor = (val) => {
   if (val >= 10) return '#ef4444';
   if (val >= 5)  return '#f59e0b';
-  return '#22c55e';
+  return '#39FF14';
 };
 
 const CustomTooltip = ({ active, payload, label }) => {
@@ -23,9 +24,9 @@ const CustomTooltip = ({ active, payload, label }) => {
   return (
     <div className="chart-tooltip p-3 text-sm">
       <p className="font-semibold text-[#F3F4F4] mb-1">{label}</p>
-      <p className="text-[rgba(243,244,244,0.68)]">Avg Defect Rate: <span className="font-bold text-[#FFABAB]">{d.avg_defect}%</span></p>
+      <p className="text-[rgba(243,244,244,0.68)]">Avg Defect Rate: <span className="font-bold text-[#FF0000]">{d.avg_defect}%</span></p>
       <p className="text-[rgba(243,244,244,0.68)]">Tests Run: <span className="font-medium">{d.test_count}</span></p>
-      <p className="text-[rgba(243,244,244,0.68)]">Total Failed: <span className="font-medium text-[#FFABAB]">{d.total_failed}</span></p>
+      <p className="text-[rgba(243,244,244,0.68)]">Total Failed: <span className="font-medium text-[#FF0000]">{d.total_failed}</span></p>
     </div>
   );
 };
@@ -55,13 +56,13 @@ export default function Analytics() {
       }));
       setData({ byLine, byModel });
     } catch (e) {
-      setError(e.message);
+      setError(getErrorMessage(e));
     } finally {
       setLoading(false);
     }
   }, []);
 
-  useEffect(() => { fetchData(); }, [fetchData]);
+  useLoadOnChange(fetchData);
 
   const highDefectLines  = data?.byLine.filter(d => d.avg_defect >= DEFECT_THRESHOLD)  || [];
   const highDefectModels = data?.byModel.filter(d => d.avg_defect >= DEFECT_THRESHOLD) || [];
@@ -79,18 +80,18 @@ export default function Analytics() {
       {/* ─── Alert Summary ─── */}
       {(highDefectLines.length > 0 || highDefectModels.length > 0) && (
         <div className="section-card p-4">
-          <div className="flex items-center gap-2 text-[#FFABAB] font-semibold text-sm mb-2">
+          <div className="flex items-center gap-2 text-[#FF0000] font-semibold text-sm mb-2">
             <AlertTriangle size={16} />
             High Defect Rate Detected
           </div>
           <div className="flex flex-wrap gap-2">
             {highDefectLines.map(d => (
-              <span key={d.name} className="px-2 py-1 bg-[rgba(244,107,107,0.16)] text-[#FFABAB] rounded-lg text-xs font-medium">
+              <span key={d.name} className="px-2 py-1 bg-[rgba(255,0,0,0.16)] text-[#FF0000] rounded-lg text-xs font-medium">
                 Line: {d.name} — {d.avg_defect}%
               </span>
             ))}
             {highDefectModels.map(d => (
-              <span key={d.name} className="px-2 py-1 bg-[rgba(240,187,98,0.16)] text-[#FFD796] rounded-lg text-xs font-medium">
+              <span key={d.name} className="px-2 py-1 bg-[rgba(255,95,31,0.16)] text-[#FF5F1F] rounded-lg text-xs font-medium">
                 Model: {d.name} — {d.avg_defect}%
               </span>
             ))}
@@ -104,8 +105,8 @@ export default function Analytics() {
         {/* By Line */}
         <div className="section-card p-5">
           <div className="flex items-center gap-2 mb-4">
-            <div className="w-8 h-8 bg-[rgba(255, 0, 51,0.16)] rounded-lg flex items-center justify-center">
-              <Factory size={16} className="text-[#FF0033]" />
+            <div className="w-8 h-8 bg-[rgba(255, 0, 0,0.16)] rounded-lg flex items-center justify-center">
+              <Factory size={16} className="text-[#FF0000]" />
             </div>
             <div>
               <p className="font-semibold text-[#F3F4F4] text-sm">Defect Rate by Production Line</p>
@@ -128,7 +129,7 @@ export default function Analytics() {
                 />
                 <YAxis tick={{ fontSize: 11, fill: 'rgba(243,244,244,0.72)' }} unit="%" />
                 <Tooltip content={<CustomTooltip />} />
-                <Bar dataKey="avg_defect" radius={[4, 4, 0, 0]}>
+                <Bar dataKey="avg_defect" radius={0}>
                   {data.byLine.map((d, i) => (
                     <Cell key={i} fill={barColor(d.avg_defect)} />
                   ))}
@@ -148,8 +149,8 @@ export default function Analytics() {
         {/* By Model */}
         <div className="section-card p-5">
           <div className="flex items-center gap-2 mb-4">
-            <div className="w-8 h-8 bg-[rgba(156,163,255,0.16)] rounded-lg flex items-center justify-center">
-              <Car size={16} className="text-[#C6CAFF]" />
+            <div className="w-8 h-8 bg-[rgba(0,255,255,0.16)] rounded-lg flex items-center justify-center">
+              <Car size={16} className="text-[#00FFFF]" />
             </div>
             <div>
               <p className="font-semibold text-[#F3F4F4] text-sm">Defect Rate by Car Model</p>
@@ -172,7 +173,7 @@ export default function Analytics() {
                 />
                 <YAxis tick={{ fontSize: 11, fill: 'rgba(243,244,244,0.72)' }} unit="%" />
                 <Tooltip content={<CustomTooltip />} />
-                <Bar dataKey="avg_defect" radius={[4, 4, 0, 0]}>
+                <Bar dataKey="avg_defect" radius={0}>
                   {data.byModel.map((d, i) => (
                     <Cell key={i} fill={barColor(d.avg_defect)} />
                   ))}
@@ -199,27 +200,27 @@ export default function Analytics() {
           </div>
           <table className="w-full text-sm data-table">
             <thead>
-              <tr className="bg-gray-50 border-b border-gray-200">
-                <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wide">Line</th>
-                <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wide">Avg Defect</th>
-                <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wide">Tests</th>
-                <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wide">Total Failed</th>
+              <tr className="bg-[#0a0a0a] border-b border-red-900/40">
+                <th className="px-4 py-3 text-left text-xs font-semibold text-neutral-500 uppercase tracking-wide">Line</th>
+                <th className="px-4 py-3 text-left text-xs font-semibold text-neutral-500 uppercase tracking-wide">Avg Defect</th>
+                <th className="px-4 py-3 text-left text-xs font-semibold text-neutral-500 uppercase tracking-wide">Tests</th>
+                <th className="px-4 py-3 text-left text-xs font-semibold text-neutral-500 uppercase tracking-wide">Total Failed</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-100">
+            <tbody className="divide-y divide-red-900/30">
               {data.byLine.length === 0 ? (
-                <tr><td colSpan={4} className="px-4 py-8 text-center text-gray-400">No data.</td></tr>
+                <tr><td colSpan={4} className="px-4 py-8 text-center text-neutral-400">No data.</td></tr>
               ) : data.byLine.map((d, i) => (
-                <tr key={i} className="hover:bg-gray-50 transition-colors">
-                  <td className="px-4 py-3 font-medium text-gray-800">{d.name}</td>
+                <tr key={i} className="hover:bg-[#0a0a0a] transition-colors">
+                  <td className="px-4 py-3 font-medium text-white">{d.name}</td>
                   <td className="px-4 py-3">
                     <span className={`px-2 py-0.5 rounded-full text-xs font-semibold ${
-                      d.avg_defect >= 10 ? 'bg-red-100 text-red-700'
-                      : d.avg_defect >= 5 ? 'bg-yellow-100 text-yellow-700'
-                      : 'bg-green-100 text-green-700'
+                      d.avg_defect >= 10 ? 'bg-red-950/40 text-red-400'
+                      : d.avg_defect >= 5 ? 'bg-yellow-950/40 text-yellow-400'
+                      : 'bg-green-950/40 text-green-400'
                     }`}>{d.avg_defect}%</span>
                   </td>
-                  <td className="px-4 py-3 text-gray-600">{d.test_count}</td>
+                  <td className="px-4 py-3 text-neutral-400">{d.test_count}</td>
                   <td className="px-4 py-3 text-red-500 font-medium">{d.total_failed}</td>
                 </tr>
               ))}
@@ -234,27 +235,27 @@ export default function Analytics() {
           </div>
           <table className="w-full text-sm data-table">
             <thead>
-              <tr className="bg-gray-50 border-b border-gray-200">
-                <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wide">Model</th>
-                <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wide">Avg Defect</th>
-                <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wide">Tests</th>
-                <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wide">Total Failed</th>
+              <tr className="bg-[#0a0a0a] border-b border-red-900/40">
+                <th className="px-4 py-3 text-left text-xs font-semibold text-neutral-500 uppercase tracking-wide">Model</th>
+                <th className="px-4 py-3 text-left text-xs font-semibold text-neutral-500 uppercase tracking-wide">Avg Defect</th>
+                <th className="px-4 py-3 text-left text-xs font-semibold text-neutral-500 uppercase tracking-wide">Tests</th>
+                <th className="px-4 py-3 text-left text-xs font-semibold text-neutral-500 uppercase tracking-wide">Total Failed</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-100">
+            <tbody className="divide-y divide-red-900/30">
               {data.byModel.length === 0 ? (
-                <tr><td colSpan={4} className="px-4 py-8 text-center text-gray-400">No data.</td></tr>
+                <tr><td colSpan={4} className="px-4 py-8 text-center text-neutral-400">No data.</td></tr>
               ) : data.byModel.map((d, i) => (
-                <tr key={i} className="hover:bg-gray-50 transition-colors">
-                  <td className="px-4 py-3 font-medium text-gray-800">{d.name}</td>
+                <tr key={i} className="hover:bg-[#0a0a0a] transition-colors">
+                  <td className="px-4 py-3 font-medium text-white">{d.name}</td>
                   <td className="px-4 py-3">
                     <span className={`px-2 py-0.5 rounded-full text-xs font-semibold ${
-                      d.avg_defect >= 10 ? 'bg-red-100 text-red-700'
-                      : d.avg_defect >= 5 ? 'bg-yellow-100 text-yellow-700'
-                      : 'bg-green-100 text-green-700'
+                      d.avg_defect >= 10 ? 'bg-red-950/40 text-red-400'
+                      : d.avg_defect >= 5 ? 'bg-yellow-950/40 text-yellow-400'
+                      : 'bg-green-950/40 text-green-400'
                     }`}>{d.avg_defect}%</span>
                   </td>
-                  <td className="px-4 py-3 text-gray-600">{d.test_count}</td>
+                  <td className="px-4 py-3 text-neutral-400">{d.test_count}</td>
                   <td className="px-4 py-3 text-red-500 font-medium">{d.total_failed}</td>
                 </tr>
               ))}

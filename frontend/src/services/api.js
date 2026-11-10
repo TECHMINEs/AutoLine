@@ -20,7 +20,7 @@ export const getDailyProduction  = (search = '') =>
 export const postDailyProduction = (data) => api.post('/dailyproduction', data);
 
 // ─── PARTS ───────────────────────────────────────────────────────────────────
-// Returns rows: [PART_ID, PART_NAME, PART_CODE, PART_CATEGORY, UNIT_PRICE, STOCK_QUANTITY, MIN_STOCK_LEVEL, SUPPLIER_NAME, DESCRIPTION, LAST_UPDATED]
+// Returns rows: [PART_ID, PART_NAME, PART_CODE, PART_CATEGORY, UNIT_PRICE, STOCK_QUANTITY, MIN_STOCK_LEVEL, LAST_UPDATED]
 export const getParts        = (search = '') =>
   api.get('/parts', { params: search ? { search } : {} });
 
@@ -69,7 +69,6 @@ export const getEmployees  = (search = '') =>
   api.get('/employees', { params: search ? { search } : {} });
 export const postEmployee = (data) => api.post('/employees', data);
 
-export const getUsers      = () => api.get('/users');
 export const getDefectCategories = () => api.get('/defectcategory');
 export const postLine  = (data) => api.post('/lines', data);
 export const postModel = (data) => api.post('/models', data);
@@ -80,3 +79,14 @@ export const putModel    = (id, data) => api.put(`/models/${id}`, data);
 export const putLine     = (id, data) => api.put(`/lines/${id}`, data);
 export const getQualitySummary = () => api.get('/qualitytest/summary');
 export default api;
+
+// ─── ERRORS ──────────────────────────────────────────────────────────────────
+/** Converts an axios error into a message that is safe and useful to show to users. */
+export const getErrorMessage = (error, fallback = 'Something went wrong. Please try again.') => {
+  const serverMessage = error?.response?.data?.error;
+  if (typeof serverMessage === 'string' && serverMessage.trim()) return serverMessage;
+  if (error?.code === 'ECONNABORTED') return 'The server took too long to respond. Please try again.';
+  if (!error?.response) return 'Cannot reach the AutoLine server. Check that the backend is running.';
+  if (error.response.status >= 500) return 'The server hit an unexpected error. Please try again shortly.';
+  return fallback;
+};

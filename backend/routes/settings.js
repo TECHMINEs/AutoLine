@@ -1,3 +1,5 @@
+const { sendServerError } = require('../utils/http');
+const bcrypt = require('bcryptjs');
 const express = require("express")
 const {getConnection} = require('../db');
 const settingsRouter = express.Router();
@@ -12,7 +14,7 @@ settingsRouter.get('/lines', async (req,res)=> {
     await connection.close();
     }
     catch(err) {
-        console.log("Error while getting production line data", err);
+        sendServerError(res, 'Error while getting production line data', err);
         
     }
    
@@ -39,12 +41,7 @@ settingsRouter.post('/lines', async (req,res)=> {
         })
     }
     catch(err) {
-        console.log("Error while getting production line data", err);
-        res.status(500).json({
-            error:err.message
-        })
-        
-    }
+        sendServerError(res, 'Error while getting production line data', err);}
    
 })
 
@@ -53,7 +50,8 @@ settingsRouter.post('/lines', async (req,res)=> {
 settingsRouter.get('/models', async (req, res)=> {
     try {
         const connection= await getConnection();
-        let query = `select * from car_models WHERE 1=1`;
+        // Column order is the contract with the Models page: 0 id, 1 name, 2 type, 3 price, 4 code, 5 description, 6 is_active
+        let query = `SELECT model_id, model_name, model_type, base_price, model_code, description, is_active FROM car_models WHERE 1=1`;
        
         let binds = {}
         if (req.query.search) {
@@ -67,8 +65,7 @@ settingsRouter.get('/models', async (req, res)=> {
 
     }
     catch(err) {
-        console.log("Eror while getting model data", err);
-         res.status(500).json({ error: err.message });
+        sendServerError(res, 'Error while getting model data', err);
         
     }
 
@@ -79,11 +76,12 @@ settingsRouter.post('/models' ,async (req,res)=>{
     try {
         const {model_name, model_type, base_price, model_code, description, isactive} = req.body;
         const connection= await getConnection();
-        await connection.execute(`insert into car_models (MODEL_ID, MODEL_NAME, MODEL_TYPE, BASE_PRICE, MODEL_CODE, IS_ACTIVE) SELECT NVL((SELECT MAX(model_id) FROM car_models), 0) + 1, :model_name, :model_type, :base_price, :model_code, :isactive FROM DUAL`, {
+        await connection.execute(`insert into car_models (MODEL_ID, MODEL_NAME, MODEL_TYPE, BASE_PRICE, MODEL_CODE, DESCRIPTION, IS_ACTIVE) SELECT NVL((SELECT MAX(model_id) FROM car_models), 0) + 1, :model_name, :model_type, :base_price, :model_code, :description, :isactive FROM DUAL`, {
             model_name,
             model_type,
             base_price,
             model_code,
+            description: description || null,
             isactive
         },
     {autoCommit:true})
@@ -91,10 +89,7 @@ settingsRouter.post('/models' ,async (req,res)=>{
     await connection.close();
     }
     catch(err) {
-        console.log("Error while inserting car_model details", err);
-        res.status(500).json({error:err.message})
-        
-    }
+        sendServerError(res, 'Error while inserting car_model details', err);}
 })
 
 
@@ -116,7 +111,7 @@ settingsRouter.get('/parts', async (req, res)=> {
 
     }
     catch(err) {
-        console.log("Eror while getting parts data", err);
+        sendServerError(res, 'Error while getting parts data', err);
         
     }
 
@@ -135,10 +130,7 @@ settingsRouter.post('/parts' ,async (req,res)=>{
     await connection.close();
     }
     catch(err) {
-        console.log("Error while inserting parts details", err);
-        res.status(500).json({error:err.message})
-        
-    }
+        sendServerError(res, 'Error while inserting parts details', err);}
 })
 
 //get employees
@@ -149,10 +141,13 @@ settingsRouter.get('/employees', async (req, res) => {
     try {
         connection = await getConnection();
 
+        // Column order is the contract with the Employees page:
+        // 0 id, 1 name, 2 code, 3 designation, 4 line_id, 5 email, 6 phone, 7 joining_date, 8 is_active
         let query = `
-            SELECT *
+            SELECT employee_id, employee_name, employee_code, designation, line_id,
+                   email, phone, joining_date, is_active
             FROM EMPLOYEES
-            where 1=1
+            WHERE 1=1
         `;
 
         let binds = {};
@@ -170,8 +165,7 @@ settingsRouter.get('/employees', async (req, res) => {
         res.json(result.rows);
 
     } catch (err) {
-        console.log("Error fetching employees", err);
-        res.status(500).json({ error: err.message });
+        sendServerError(res, 'Error fetching employees', err);
 
     } finally {
         if (connection) await connection.close();
@@ -183,33 +177,17 @@ settingsRouter.post('/employees' ,async (req,res)=>{
     try {
         const {employee_name,employee_code,designation,line_id,email,phone, joining_date, is_active} = req.body;
         const connection= await getConnection();
-        await connection.execute(`insert into employees (employee_id ,employee_name,employee_code,designation,line_id,is_active) SELECT NVL((SELECT MAX(employee_id) FROM employees), 0) + 1, :employee_name, :employee_code, :designation, :line_id, :is_active FROM DUAL`, {
-            employee_name, employee_code, designation, line_id, is_active
+        await connection.execute(`insert into employees (employee_id, employee_name, employee_code, designation, line_id, email, phone, joining_date, is_active) SELECT NVL((SELECT MAX(employee_id) FROM employees), 0) + 1, :employee_name, :employee_code, :designation, :line_id, :email, :phone, :joining_date, :is_active FROM DUAL`, {
+            employee_name, employee_code, designation, line_id,
+            email: email || null, phone: phone || null, joining_date: joining_date || null, is_active
         },
     {autoCommit:true})
     res.status(201).json({message:"Row inserted"})
     await connection.close();
     }
     catch(err) {
-        console.log("Error while inserting employees details", err);
-        res.status(500).json({error:err.message})
-    }})
+        sendServerError(res, 'Error while inserting employees details', err);}})
         
-//get users
-
-settingsRouter.get('/users', async (req,res)=> {
-    try {
-         const connection = await getConnection();
-        const userdata=await connection.execute('select * from users');
-        res.json(userdata.rows);
-        await connection.close();
-    }
-    catch(err) {
-        console.log("Error while getting users data");
-        
-    }
-
-})
 
 // POST /login
 settingsRouter.post('/auth/login', async (req, res) => {
@@ -232,11 +210,25 @@ settingsRouter.post('/auth/login', async (req, res) => {
     const row = result.rows[0];
     // row: [0:user_id, 1:username, 2:password_hash, 3:role, 4:full_name]
 
-    const storedHash = row[2];
+    const storedHash = row[2] || '';
+    const isBcryptHash = /^\$2[aby]\$\d{2}\$/.test(storedHash);
 
-    // Plain text comparison — upgrade to bcrypt when ready
-    if (storedHash !== password) {
+    // bcrypt verification; legacy plaintext seed rows are accepted once and
+    // transparently re-hashed so no credential stays in plaintext after first login.
+    const valid = isBcryptHash
+      ? await bcrypt.compare(password || '', storedHash)
+      : typeof password === 'string' && password.length > 0 && password === storedHash;
+
+    if (!valid) {
       return res.status(401).json({ error: 'Invalid username or password.' });
+    }
+
+    if (!isBcryptHash) {
+      const upgraded = await bcrypt.hash(password, 12);
+      await connection.execute(
+        'UPDATE USERS SET password_hash = :hash WHERE user_id = :id',
+        { hash: upgraded, id: row[0] }
+      );
     }
 
     res.json({
@@ -265,7 +257,7 @@ settingsRouter.post('/auth/login', async (req, res) => {
         displayName: 'Operator One (Local Mode)'
       });
     }
-    res.status(500).json({ error: err.message });
+    sendServerError(res, 'settings route', err);
   } finally {
     if (connection) {
        try { await connection.close(); } catch(e){}
@@ -283,7 +275,7 @@ settingsRouter.get('/defectcategory', async (req,res)=> {
         await connection.close();
     }
     catch(err) {
-        console.log("Error while getting defect categories data");
+        sendServerError(res, 'Error while getting defect categories data', err);
         
     }
 
@@ -300,14 +292,21 @@ settingsRouter.put('/employees/:id', async (req, res) => {
         employee_code = :employee_code,
         designation   = :designation,
         line_id       = :line_id,
+        email         = :email,
+        phone         = :phone,
+        joining_date  = :joining_date,
         is_active     = :is_active
       WHERE employee_id = :id`,
-      { employee_name, employee_code, designation, line_id, is_active, id: Number(req.params.id) },
+      {
+        employee_name, employee_code, designation, line_id, is_active,
+        email: email || null, phone: phone || null, joining_date: joining_date || null,
+        id: Number(req.params.id),
+      },
       { autoCommit: true }
     );
     res.json({ message: 'Employee updated' });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    sendServerError(res, 'settings route', err);
   } finally {
     if (connection) await connection.close();
   }
@@ -325,14 +324,15 @@ settingsRouter.put('/models/:id', async (req, res) => {
         model_type  = :model_type,
         base_price  = :base_price,
         model_code  = :model_code,
+        description = :description,
         is_active   = :isactive
       WHERE model_id = :id`,
-      { model_name, model_type, base_price, model_code, isactive, id: Number(req.params.id) },
+      { model_name, model_type, base_price, model_code, description: description || null, isactive, id: Number(req.params.id) },
       { autoCommit: true }
     );
     res.json({ message: 'Model updated' });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    sendServerError(res, 'settings route', err);
   } finally {
     if (connection) await connection.close();
   }
@@ -356,7 +356,7 @@ settingsRouter.put('/lines/:id', async (req, res) => {
     );
     res.json({ message: 'Line updated' });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    sendServerError(res, 'settings route', err);
   } finally {
     if (connection) await connection.close();
   }

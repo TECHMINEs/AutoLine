@@ -1,3 +1,4 @@
+const { sendServerError } = require('../utils/http');
 const express = require("express")
 const partsusageRouter = express.Router();
 const {getConnection} = require('../db');
@@ -13,8 +14,7 @@ partsusageRouter.get('/partsusage', async(req, res)=> {
 
     }
     catch(err) {
-        console.log('Error while getting parts usage data.', err);
-        res.status(500).json({ error: err.message }); 
+        sendServerError(res, 'Error while getting parts usage data', err); 
         
     }
 })
@@ -53,8 +53,7 @@ partsusageRouter.post('/partsusage', async(req, res)=> {
 
     }
     catch(err) {
-        console.log('Error while inserting parts usage data.', err);
-        res.status(500).json({ error: err.message }); 
+        sendServerError(res, 'Error while inserting parts usage data', err); 
         
     }
 })
@@ -94,8 +93,7 @@ partsusageRouter.get('/parts/summary', async (req, res) => {
         });
 
     } catch (err) {
-        console.log("Error fetching parts summary", err);
-        res.status(500).json({ error: err.message });
+        sendServerError(res, 'Error fetching parts summary', err);
 
     } finally {
         if (connection) await connection.close();
@@ -109,7 +107,16 @@ partsusageRouter.post('/parts/bulk-update', async (req, res) => {
     try {
         const { updates } = req.body;
 
+        const VALID_TYPES = ['ADD', 'SUBTRACT', 'SET'];
+        const invalid = !Array.isArray(updates) || updates.length === 0 || updates.some(u =>
+            !VALID_TYPES.includes(u?.type) || !Number.isInteger(Number(u?.quantity)) || Number(u.quantity) < 0 || u?.part_id == null);
+        if (invalid) {
+            return res.status(400).json({ error: 'Each update needs a part_id, a type (ADD, SUBTRACT or SET) and a non-negative whole quantity.' });
+        }
+
         connection = await getConnection();
+        // All-or-nothing: a failure part-way through must not leave stock half-updated
+        await connection.begin();
 
         for (let item of updates) {
 
@@ -126,7 +133,7 @@ partsusageRouter.post('/parts/bulk-update', async (req, res) => {
             else if (item.type === "SUBTRACT") {
                 query = `
                     UPDATE PARTS 
-                    SET stock_quantity = stock_quantity - :qty
+                    SET stock_quantity = MAX(stock_quantity - :qty, 0)
                     WHERE part_id = :id
                 `;
             }
@@ -150,8 +157,10 @@ partsusageRouter.post('/parts/bulk-update', async (req, res) => {
         res.json({ message: "Bulk update successful" });
 
     } catch (err) {
-        console.log("Bulk update error", err);
-        res.status(500).json({ error: err.message });
+        if (connection) {
+            try { await connection.rollback(); } catch { /* connection already unusable */ }
+        }
+        sendServerError(res, 'Bulk update error', err);
 
     } finally {
         if (connection) await connection.close();
@@ -175,6 +184,7 @@ partsusageRouter.post('/parts/order', async (req, res) => {
         });
 
         connection = await getConnection();
+        await connection.begin();
 
         // ADD ordered quantity to stock for each part
         for (const item of items) {
@@ -193,9 +203,9 @@ partsusageRouter.post('/parts/order', async (req, res) => {
 
     } catch (err) {
         if (connection) {
-            try { await connection.rollback(); } catch (_) {}
+            try { await connection.rollback(); } catch { /* connection already unusable */ }
         }
-        res.status(500).json({ error: err.message });
+        sendServerError(res, 'parts route', err);
     } finally {
         if (connection) await connection.close();
     }

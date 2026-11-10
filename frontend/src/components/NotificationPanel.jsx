@@ -4,6 +4,7 @@ import {
   TrendingDown, RefreshCw, CheckCircle2,
 } from 'lucide-react';
 import { getParts, getQualitySummary } from '../services/api';
+import { useLoadOnChange } from '../hooks/useLoadOnChange';
 
 const SEV = {
   critical: { label: 'Critical' },
@@ -14,12 +15,14 @@ const SEV = {
 export default function NotificationPanel() {
   const [open, setOpen] = useState(false);
   const [notifications, setNotifications] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [lastRefreshed, setLastRefreshed] = useState(null);
 
+  // Async only: every setState happens after an await, so this is safe to call from an effect
   const buildNotifications = useCallback(async () => {
-    setLoading(true);
     const notes = [];
+    const failures = [];
 
     try {
       const partsRes = await getParts();
@@ -34,7 +37,7 @@ export default function NotificationPanel() {
             severity: 'critical',
             icon: Package,
             title: `${p[1]} is OUT OF STOCK`,
-            detail: `Part code: ${p[2]} · Supplier: ${p[7] || 'N/A'}`,
+            detail: `Part code: ${p[2]} · Category: ${p[3] || 'N/A'}`,
           });
         } else if (stock < min) {
           notes.push({
@@ -85,8 +88,12 @@ export default function NotificationPanel() {
             });
           }
         });
-      } catch (_) {}
-    } catch (_) {}
+      } catch {
+        failures.push('quality data');
+      }
+    } catch {
+      failures.push('parts inventory');
+    }
 
     notes.sort((a, b) => {
       const order = { critical: 0, warning: 1, info: 2 };
@@ -94,15 +101,23 @@ export default function NotificationPanel() {
     });
 
     setNotifications(notes);
+    // Never report "all systems normal" when we simply could not reach the API
+    setError(failures.length ? `Could not load ${failures.join(' and ')}. Check the backend connection.` : null);
     setLastRefreshed(new Date());
     setLoading(false);
   }, []);
 
+  // Initial load (deferred, cancellable) plus a 60s background refresh
+  useLoadOnChange(buildNotifications);
   useEffect(() => {
-    buildNotifications();
     const interval = setInterval(buildNotifications, 60000);
     return () => clearInterval(interval);
   }, [buildNotifications]);
+
+  const refresh = () => {
+    setLoading(true);
+    buildNotifications();
+  };
 
   const criticalCount = notifications.filter(n => n.severity === 'critical').length;
   const warningCount = notifications.filter(n => n.severity === 'warning').length;
@@ -118,7 +133,7 @@ export default function NotificationPanel() {
       >
         <Bell size={18} className="text-[rgba(243,244,244,0.72)]" />
         {badgeCount > 0 && (
-          <span className={`absolute -top-0.5 -right-0.5 min-w-[18px] h-[18px] flex items-center justify-center rounded-full text-[#061E29] text-xs font-bold px-1 ${criticalCount > 0 ? 'bg-[#FFABAB]' : 'bg-[#FFD796]'}`}>
+          <span className={`absolute -top-0.5 -right-0.5 min-w-[18px] h-[18px] flex items-center justify-center rounded-full text-[#061E29] text-xs font-bold px-1 ${criticalCount > 0 ? 'bg-[#FF0000]' : 'bg-[#FF5F1F]'}`}>
             {badgeCount > 9 ? '9+' : badgeCount}
           </span>
         )}
@@ -138,7 +153,7 @@ export default function NotificationPanel() {
               </div>
               <div className="flex items-center gap-2">
                 <button
-                  onClick={buildNotifications}
+                  onClick={refresh}
                   disabled={loading}
                   className="p-1.5 rounded-lg hover:bg-white/8 text-[rgba(243,244,244,0.52)] hover:text-[#F3F4F4] transition"
                   title="Refresh"
@@ -159,9 +174,15 @@ export default function NotificationPanel() {
                 <div className="flex items-center justify-center py-10 gap-2 text-[rgba(243,244,244,0.58)] text-sm">
                   <RefreshCw size={14} className="animate-spin" /> Checking systems...
                 </div>
+              ) : error && notifications.length === 0 ? (
+                <div role="alert" className="flex flex-col items-center justify-center py-10 gap-2 px-4 text-center">
+                  <AlertTriangle size={28} className="text-[#FF5F1F]" />
+                  <p className="text-sm font-medium text-[#F3F4F4]">Status unavailable</p>
+                  <p className="text-xs text-[rgba(243,244,244,0.52)]">{error}</p>
+                </div>
               ) : notifications.length === 0 ? (
                 <div className="flex flex-col items-center justify-center py-10 gap-2">
-                  <CheckCircle2 size={28} className="text-[#FF0033]" />
+                  <CheckCircle2 size={28} className="text-[#FF0000]" />
                   <p className="text-sm font-medium text-[#F3F4F4]">All systems normal</p>
                   <p className="text-xs text-[rgba(243,244,244,0.52)]">No stock or quality issues detected</p>
                 </div>
@@ -169,13 +190,13 @@ export default function NotificationPanel() {
                 notifications.map(n => {
                   const Icon = n.icon;
                   return (
-                    <div key={n.id} className={`flex items-start gap-3 px-4 py-3 ${n.severity === 'critical' ? 'bg-[rgba(244,107,107,0.08)]' : ''}`}>
+                    <div key={n.id} className={`flex items-start gap-3 px-4 py-3 ${n.severity === 'critical' ? 'bg-[rgba(255,0,0,0.08)]' : ''}`}>
                       <div className={`w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5 ${
                         n.severity === 'critical'
-                          ? 'bg-red-100'
+                          ? 'bg-red-950/40'
                           : n.severity === 'warning'
-                            ? 'bg-yellow-100'
-                            : 'bg-blue-100'
+                            ? 'bg-yellow-950/40'
+                            : 'bg-cyan-950/40'
                       }`}>
                         <Icon
                           size={15}
@@ -184,7 +205,7 @@ export default function NotificationPanel() {
                               ? 'text-red-600'
                               : n.severity === 'warning'
                                 ? 'text-yellow-600'
-                                : 'text-blue-600'
+                                : 'text-cyan-600'
                           }
                         />
                       </div>
@@ -194,10 +215,10 @@ export default function NotificationPanel() {
                       </div>
                       <span className={`text-xs px-1.5 py-0.5 rounded-full font-semibold flex-shrink-0 mt-0.5 ${
                         n.severity === 'critical'
-                          ? 'bg-red-100 text-red-700'
+                          ? 'bg-red-950/40 text-red-400'
                           : n.severity === 'warning'
-                            ? 'bg-yellow-100 text-yellow-700'
-                            : 'bg-blue-100 text-blue-700'
+                            ? 'bg-yellow-950/40 text-yellow-400'
+                            : 'bg-cyan-950/40 text-cyan-400'
                       }`}>
                         {SEV[n.severity].label}
                       </span>
