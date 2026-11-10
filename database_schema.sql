@@ -130,12 +130,12 @@ CREATE TABLE AUDIT_LOG (
 -- ==========================================================
 
 INSERT INTO USERS (user_id, username, password_hash, full_name, email, user_role) VALUES (1, 'admin', 'admin', 'System Admin', 'admin@autoline.systems', 'admin');
-INSERT INTO USERS (user_id, username, password_hash, full_name, email, user_role) VALUES (2, 'manager', 'manager123', 'Factory Manager', 'manager@autoline.systems', 'manager');
+INSERT INTO USERS (user_id, username, password_hash, full_name, email, user_role) VALUES (2, 'manager', 'manager', 'Factory Manager', 'manager@autoline.systems', 'manager');
 INSERT INTO USERS (user_id, username, password_hash, full_name, email, user_role) VALUES (3, 'user1', 'password', 'Operator One', 'user1@autoline.systems', 'operator');
 INSERT INTO USERS (user_id, username, password_hash, full_name, email, user_role) VALUES (4, 'user2', 'password', 'Operator Two', 'user2@autoline.systems', 'operator');
-INSERT INTO USERS (user_id, username, password_hash, full_name, email, user_role) VALUES (5, 'inspector1', '12345', 'Quality Inspector', 'qa@autoline.systems', 'inspector');
-INSERT INTO USERS (user_id, username, password_hash, full_name, email, user_role) VALUES (6, 'supervisor1', 'super123', 'Line Supervisor 1', 'super1@autoline.systems', 'supervisor');
-INSERT INTO USERS (user_id, username, password_hash, full_name, email, user_role) VALUES (7, 'supervisor2', 'super123', 'Line Supervisor 2', 'super2@autoline.systems', 'supervisor');
+INSERT INTO USERS (user_id, username, password_hash, full_name, email, user_role) VALUES (5, 'inspector1', 'inspect', 'Quality Inspector', 'qa@autoline.systems', 'inspector');
+INSERT INTO USERS (user_id, username, password_hash, full_name, email, user_role) VALUES (6, 'supervisor1', 'super', 'Line Supervisor 1', 'super1@autoline.systems', 'supervisor');
+INSERT INTO USERS (user_id, username, password_hash, full_name, email, user_role) VALUES (7, 'supervisor2', 'super', 'Line Supervisor 2', 'super2@autoline.systems', 'supervisor');
 INSERT INTO USERS (user_id, username, password_hash, full_name, email, user_role) VALUES (8, 'user3', 'password123', 'Operator Three', 'user3@autoline.systems', 'operator');
 INSERT INTO USERS (user_id, username, password_hash, full_name, email, user_role) VALUES (9, 'user4', 'password123', 'Operator Four', 'user4@autoline.systems', 'operator');
 INSERT INTO USERS (user_id, username, password_hash, full_name, email, user_role) VALUES (10, 'admin2', 'admin2', 'Backup Admin', 'admin2@autoline.systems', 'admin');

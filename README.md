@@ -17,6 +17,8 @@
 
 AutoLine gives a vehicle plant a single dashboard for daily production output, parts inventory, line-side consumption and quality testing, with role-based views for admins, managers and operators. It turns raw shop-floor entries into live KPIs, low-stock alerts and defect analytics so problems surface before they stop a line.
 
+*Built as a Database Systems (DBS) course project, originally on Oracle and now running on SQLite through a dialect translation layer.*
+
 ---
 
 ## Architecture
@@ -87,7 +89,9 @@ The Vite dev server proxies `/api/*` to the backend, so no CORS setup is needed.
 | Role | Username | Password |
 |---|---|---|
 | Admin | `admin` | `admin` |
-| Manager | `manager` | `manager123` |
+| Manager | `manager` | `manager` |
+| Supervisor | `supervisor1` | `super` |
+| Inspector | `inspector1` | `inspect` |
 | Operator | `user1` | `password` |
 
 **Reset the database** to the seed state (destructive):
@@ -102,6 +106,7 @@ node init_db.js
 ## Key Features
 
 - **Live KPI dashboard:** total production, inventory value, defect rate and a production trend chart.
+- **Automatic parts consumption:** logging a production run inserts the matching parts usage from the bill of materials, so no manual entry is needed.
 - **Parts inventory:** stock levels against minimums, with OK / LOW / OUT filtering and search.
 - **Transactional bulk stock updates and purchase orders:** all-or-nothing, so a failure never leaves stock half-updated. Orders come with PDF bills.
 - **Quality testing:** per-line and per-model defect analytics with threshold highlighting.
