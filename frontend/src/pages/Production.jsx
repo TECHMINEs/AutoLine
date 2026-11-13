@@ -121,7 +121,7 @@ export default function Production() {
   return (
     <div className="space-y-4 mt-10">
       {toast && (
-        <div className={`toast-shell fixed top-4 right-4 z-50 px-4 py-3 rounded-lg text-sm text-white flex items-center gap-3 ${toast.type === 'error' ? 'bg-[rgba(255,0,0,0.86)]' : 'bg-[rgba(255, 0, 0,0.86)]'}`}>
+        <div className={`toast-shell fixed top-4 right-4 z-50 px-4 py-3 rounded-lg text-sm text-white flex items-center gap-3 ${toast.type === 'error' ? 'bg-[rgba(255,38,38,0.86)]' : 'bg-[rgba(255,38,38,0.86)]'}`}>
           {toast.msg}
           <button onClick={() => setToast(null)}><X size={14} /></button>
         </div>
@@ -246,7 +246,7 @@ export default function Production() {
           <div className="overflow-x-auto">
             <table className="w-full text-sm data-table">
               <thead>
-                <tr className="bg-[#0a0a0a] border-b border-red-900/40">
+                <tr className="bg-[#0a0a0a] border-b border-line">
                   {COLS.map(c => (
                     <th
                       key={c.idx}
@@ -258,7 +258,7 @@ export default function Production() {
                   ))}
                 </tr>
               </thead>
-              <tbody className="divide-y divide-red-900/30">
+              <tbody className="divide-y divide-line">
                 {sortedRows.length === 0 ? (
                   <tr><td colSpan={6} className="px-4 py-10 text-center text-neutral-400 text-sm">No records found.</td></tr>
                 ) : sortedRows.map((row, i) => (
@@ -273,14 +273,14 @@ export default function Production() {
                     </td>
                     <td className="px-4 py-3 text-neutral-200">{row[2] || '—'}</td>
                     <td className="px-4 py-3">
-                      <span className="px-2 py-1 bg-cyan-950/40 text-cyan-400 rounded-md text-xs font-medium">{row[3] || '—'}</span>
+                      <span className="px-2 py-1 bg-panel-2 text-white rounded-md text-xs font-medium">{row[3] || '—'}</span>
                     </td>
                     <td className="px-4 py-3 font-semibold text-white">{Number(row[4]).toLocaleString('en-IN')}</td>
                     <td className="px-4 py-3">
                       <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                        row[5] === 'Morning'   ? 'bg-yellow-950/40 text-yellow-400'
-                        : row[5] === 'Afternoon' ? 'bg-orange-950/40 text-orange-400'
-                        : 'bg-cyan-950/40 text-cyan-400'
+                        row[5] === 'Morning'   ? 'bg-panel-2 text-white'
+                        : row[5] === 'Afternoon' ? 'bg-panel-2 text-white'
+                        : 'bg-panel-2 text-white'
                       }`}>{row[5]}</span>
                     </td>
                   </tr>

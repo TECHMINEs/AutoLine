@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Factory, Eye, EyeOff } from 'lucide-react';
+import { Eye, EyeOff } from 'lucide-react';
 import { useAuth } from '../context/auth';
 
 export default function Login() {
@@ -26,11 +26,9 @@ export default function Login() {
     <div className="auth-shell flex items-center justify-center p-4">
       <div className="w-full max-w-sm">
         <div className="text-center mb-8">
-          <div className="w-14 h-14 bg-[#FF0000] rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-[0_18px_36px_rgba(255, 0, 0,0.2)]">
-            <Factory size={28} className="text-white" />
-          </div>
-          <h1 className="text-2xl font-bold text-white industrial-heading tracking-[0.16em]">AutoLine</h1>
-          <p className="text-[rgba(243,244,244,0.58)] text-sm mt-1">Management System</p>
+          <img src="/logo-mark.svg" alt="AutoLine logo" width={72} height={72} className="w-[72px] h-[72px] mx-auto mb-4" />
+          <h1 className="text-4xl font-bold text-white uppercase industrial-heading">Auto<span className="text-[#FF2626]">Line</span></h1>
+          <p className="tm-label mt-2">Manufacturing management system</p>
         </div>
 
         <div className="auth-card p-8">
@@ -71,7 +69,7 @@ export default function Login() {
             </div>
 
             {error && (
-              <p className="text-xs text-[#FF0000] bg-[rgba(255,0,0,0.12)] border border-[rgba(255,0,0,0.22)] rounded-lg px-3 py-2">
+              <p className="text-xs text-[#FF2626] bg-[rgba(255,38,38,0.12)] border border-[rgba(255,38,38,0.22)] rounded-lg px-3 py-2">
                 {error}
               </p>
             )}

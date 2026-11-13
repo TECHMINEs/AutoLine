@@ -107,7 +107,7 @@ export default function Lines() {
 
   const statusColor = (s) => {
     if (s === 'Active')      return 'bg-green-950/40 text-green-400';
-    if (s === 'Maintenance') return 'bg-yellow-950/40 text-yellow-400';
+    if (s === 'Maintenance') return 'bg-panel-2 text-white';
     return 'bg-[#0a0a0a] text-neutral-500';
   };
 
@@ -116,7 +116,7 @@ export default function Lines() {
   return (
     <div className="space-y-4 mt-10">
       {toast && (
-        <div className={`toast-shell fixed top-4 right-4 z-50 px-4 py-3 rounded-lg text-sm text-white flex items-center gap-3 ${toast.type === 'error' ? 'bg-[rgba(255,0,0,0.86)]' : 'bg-[rgba(255, 0, 0,0.86)]'}`}>
+        <div className={`toast-shell fixed top-4 right-4 z-50 px-4 py-3 rounded-lg text-sm text-white flex items-center gap-3 ${toast.type === 'error' ? 'bg-[rgba(255,38,38,0.86)]' : 'bg-[rgba(255,38,38,0.86)]'}`}>
           {toast.msg}
           <button onClick={() => setToast(null)}><X size={14} /></button>
         </div>
@@ -144,14 +144,14 @@ export default function Lines() {
               <input required value={form.line_name}
                 onChange={e => setForm(f => ({ ...f, line_name: e.target.value }))}
                 placeholder="e.g. Assembly Line A"
-                className="w-full border border-red-900/40 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-cyan-400"
+                className="w-full border border-line rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-stroke"
               />
             </div>
             <div>
               <label className="block text-xs font-medium text-neutral-400 mb-1">Line Type</label>
               <select value={form.line_type}
                 onChange={e => setForm(f => ({ ...f, line_type: e.target.value }))}
-                className="w-full border border-red-900/40 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-cyan-400"
+                className="w-full border border-line rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-stroke"
               >
                 <option value="">Select type…</option>
                 {LINE_TYPES.map(t => <option key={t} value={t}>{t}</option>)}
@@ -161,7 +161,7 @@ export default function Lines() {
               <label className="block text-xs font-medium text-neutral-400 mb-1">Status *</label>
               <select required value={form.status}
                 onChange={e => setForm(f => ({ ...f, status: e.target.value }))}
-                className="w-full border border-red-900/40 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-cyan-400"
+                className="w-full border border-line rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-stroke"
               >
                 {STATUSES.map(s => <option key={s} value={s}>{s}</option>)}
               </select>
@@ -171,12 +171,12 @@ export default function Lines() {
               <input type="number" min={1} value={form.daily_capacity}
                 onChange={e => setForm(f => ({ ...f, daily_capacity: e.target.value }))}
                 placeholder="e.g. 200"
-                className="w-full border border-red-900/40 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-cyan-400"
+                className="w-full border border-line rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-stroke"
               />
             </div>
             <div className="sm:col-span-2 lg:col-span-4 flex justify-end">
               <button type="submit" disabled={submitting}
-                className="px-6 py-2 bg-cyan-600 text-white text-sm rounded-lg hover:bg-cyan-700 disabled:opacity-50 transition">
+                className="tm-btn tm-btn--solid disabled:opacity-50">
                 {submitting ? 'Saving…' : 'Save Line'}
               </button>
             </div>
@@ -196,19 +196,19 @@ export default function Lines() {
           <div className="overflow-x-auto">
             <table className="w-full text-sm data-table">
               <thead>
-                <tr className="bg-[#0a0a0a] border-b border-red-900/40">
+                <tr className="bg-[#0a0a0a] border-b border-line">
                   {['ID', 'Line Name', 'Type', 'Status', 'Daily Capacity', 'Actions'].map(h => (
                     <th key={h} className="px-4 py-3 text-left text-xs font-semibold text-neutral-500 uppercase tracking-wide whitespace-nowrap">{h}</th>
                   ))}
                 </tr>
               </thead>
-              <tbody className="divide-y divide-red-900/30">
+              <tbody className="divide-y divide-line">
                 {rows.length === 0 ? (
                   <tr><td colSpan={6} className="px-4 py-10 text-center text-neutral-400">No lines found.</td></tr>
                 ) : rows.map((r, i) => {
                   const isEditing = editId === r[0];
                   return (
-                    <tr key={i} className={`transition-colors ${isEditing ? 'bg-cyan-950/40' : 'hover:bg-[#0a0a0a]'}`}>
+                    <tr key={i} className={`transition-colors ${isEditing ? 'bg-panel-2' : 'hover:bg-[#0a0a0a]'}`}>
                       <td className="px-4 py-2 font-mono text-xs text-neutral-400">{r[0]}</td>
 
                       {isEditing ? (
@@ -252,7 +252,7 @@ export default function Lines() {
                           <td className="px-4 py-3">
                             {can('canEdit') && (
                           <button onClick={() => startEdit(r)}
-                            className="flex items-center gap-1 px-2 py-1 border border-red-900/40 text-neutral-400 text-xs rounded-lg hover:bg-[#0a0a0a] transition">
+                            className="flex items-center gap-1 px-2 py-1 border border-line text-neutral-400 text-xs rounded-lg hover:bg-[#0a0a0a] transition">
                             <Pencil size={12} /> Edit
                           </button>
                         )}

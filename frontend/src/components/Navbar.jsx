@@ -57,12 +57,10 @@ export default function Navbar() {
     <header className={`navbar-shell ${scrolled ? 'navbar-shell-solid' : ''}`}>
       <div className="navbar-inner">
         <NavLink to="/home" className="navbar-brand">
-          <span className="navbar-brand-mark p-1 border border-[#FF0000] bg-black shadow-[0_0_12px_rgba(255,0,0,0.5)]">
-            <img src="/techmines-logo.jpg" alt="TECHMINES logo" className="w-full h-full object-cover" />
-          </span>
+          <img src="/logo-mark.svg" alt="AutoLine logo" width={42} height={42} className="navbar-brand-mark" />
           <span>
-            <span className="navbar-brand-title tracking-widest font-mono text-white">Auto<span className="text-[#FF0000]">Line</span></span>
-            <span className="navbar-brand-subtitle text-[10px] text-[#00FFFF] font-mono">PLASMA CORE</span>
+            <span className="navbar-brand-title text-white">Auto<span className="text-[#FF2626]">Line</span></span>
+            <span className="navbar-brand-subtitle">By TECHMINES</span>
           </span>
         </NavLink>
 

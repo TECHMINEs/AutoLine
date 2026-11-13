@@ -3,8 +3,8 @@ import { AlertTriangle, RefreshCw } from 'lucide-react';
 export default function ErrorAlert({ message, onRetry }) {
   return (
     <div className="flex flex-col items-center justify-center py-16 gap-4">
-      <div className="w-12 h-12 bg-[rgba(255,0,0,0.14)] rounded-full flex items-center justify-center border border-[rgba(255,0,0,0.22)]">
-        <AlertTriangle size={24} className="text-[#FF0000]" />
+      <div className="w-12 h-12 bg-[rgba(255,38,38,0.14)] rounded-full flex items-center justify-center border border-[rgba(255,38,38,0.22)]">
+        <AlertTriangle size={24} className="text-[#FF2626]" />
       </div>
       <div className="text-center">
         <p className="font-semibold text-[#F3F4F4]">Something went wrong</p>

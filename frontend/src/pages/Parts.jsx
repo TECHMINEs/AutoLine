@@ -15,7 +15,7 @@ function StockBadge({ stock, min }) {
   if (stock === 0)
     return <span className="px-2 py-0.5 bg-red-950/40 text-red-400 rounded-full text-xs font-semibold">OUT</span>;
   if (stock < min)
-    return <span className="px-2 py-0.5 bg-yellow-950/40 text-yellow-400 rounded-full text-xs font-semibold">LOW</span>;
+    return <span className="px-2 py-0.5 bg-panel-2 text-white rounded-full text-xs font-semibold">LOW</span>;
   return <span className="px-2 py-0.5 bg-green-950/40 text-green-400 rounded-full text-xs font-semibold">OK</span>;
 }
 
@@ -124,7 +124,7 @@ export default function Parts() {
           <div className="overflow-x-auto">
             <table className="w-full text-sm data-table">
               <thead>
-                <tr className="bg-[#0a0a0a] border-b border-red-900/40">
+                <tr className="bg-[#0a0a0a] border-b border-line">
                   <th className="px-4 py-3 text-left text-xs font-semibold text-neutral-500 uppercase tracking-wide">ID</th>
                   <th className="px-4 py-3 text-left text-xs font-semibold text-neutral-500 uppercase tracking-wide">Part Name</th>
                   <th className="px-4 py-3 text-left text-xs font-semibold text-neutral-500 uppercase tracking-wide">Code</th>
@@ -136,7 +136,7 @@ export default function Parts() {
                   <th className="px-4 py-3 text-left text-xs font-semibold text-neutral-500 uppercase tracking-wide">Last Updated</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-red-900/30">
+              <tbody className="divide-y divide-line">
                 {displayed.length === 0 ? (
                   <tr><td colSpan={9} className="px-4 py-10 text-center text-neutral-400">No parts found.</td></tr>
                 ) : displayed.map((p, i) => (
@@ -145,7 +145,7 @@ export default function Parts() {
                     <td className="px-4 py-3 font-medium text-white">{p[1]}</td>
                     <td className="px-4 py-3 font-mono text-xs text-neutral-500">{p[2]}</td>
                     <td className="px-4 py-3">
-                      <span className="px-2 py-0.5 bg-orange-950/40 text-orange-400 rounded-md text-xs font-medium">{p[3]}</span>
+                      <span className="px-2 py-0.5 bg-panel-2 text-white rounded-md text-xs font-medium">{p[3]}</span>
                     </td>
                     <td className="px-4 py-3 font-medium text-neutral-200">₹{Number(p[4]).toLocaleString('en-IN')}</td>
                     <td className="px-4 py-3 font-semibold text-white">{Number(p[5]).toLocaleString('en-IN')}</td>

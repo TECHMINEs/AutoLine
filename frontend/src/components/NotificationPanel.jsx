@@ -133,7 +133,7 @@ export default function NotificationPanel() {
       >
         <Bell size={18} className="text-[rgba(243,244,244,0.72)]" />
         {badgeCount > 0 && (
-          <span className={`absolute -top-0.5 -right-0.5 min-w-[18px] h-[18px] flex items-center justify-center rounded-full text-[#061E29] text-xs font-bold px-1 ${criticalCount > 0 ? 'bg-[#FF0000]' : 'bg-[#FF5F1F]'}`}>
+          <span className={`absolute -top-0.5 -right-0.5 min-w-[18px] h-[18px] flex items-center justify-center rounded-full text-[#061E29] text-xs font-bold px-1 ${criticalCount > 0 ? 'bg-[#FF2626]' : 'bg-white'}`}>
             {badgeCount > 9 ? '9+' : badgeCount}
           </span>
         )}
@@ -176,13 +176,13 @@ export default function NotificationPanel() {
                 </div>
               ) : error && notifications.length === 0 ? (
                 <div role="alert" className="flex flex-col items-center justify-center py-10 gap-2 px-4 text-center">
-                  <AlertTriangle size={28} className="text-[#FF5F1F]" />
+                  <AlertTriangle size={28} className="text-white" />
                   <p className="text-sm font-medium text-[#F3F4F4]">Status unavailable</p>
                   <p className="text-xs text-[rgba(243,244,244,0.52)]">{error}</p>
                 </div>
               ) : notifications.length === 0 ? (
                 <div className="flex flex-col items-center justify-center py-10 gap-2">
-                  <CheckCircle2 size={28} className="text-[#FF0000]" />
+                  <CheckCircle2 size={28} className="text-[#FF2626]" />
                   <p className="text-sm font-medium text-[#F3F4F4]">All systems normal</p>
                   <p className="text-xs text-[rgba(243,244,244,0.52)]">No stock or quality issues detected</p>
                 </div>
@@ -190,13 +190,13 @@ export default function NotificationPanel() {
                 notifications.map(n => {
                   const Icon = n.icon;
                   return (
-                    <div key={n.id} className={`flex items-start gap-3 px-4 py-3 ${n.severity === 'critical' ? 'bg-[rgba(255,0,0,0.08)]' : ''}`}>
+                    <div key={n.id} className={`flex items-start gap-3 px-4 py-3 ${n.severity === 'critical' ? 'bg-[rgba(255,38,38,0.08)]' : ''}`}>
                       <div className={`w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5 ${
                         n.severity === 'critical'
                           ? 'bg-red-950/40'
                           : n.severity === 'warning'
-                            ? 'bg-yellow-950/40'
-                            : 'bg-cyan-950/40'
+                            ? 'bg-panel-2'
+                            : 'bg-panel-2'
                       }`}>
                         <Icon
                           size={15}
@@ -204,8 +204,8 @@ export default function NotificationPanel() {
                             n.severity === 'critical'
                               ? 'text-red-600'
                               : n.severity === 'warning'
-                                ? 'text-yellow-600'
-                                : 'text-cyan-600'
+                                ? 'text-white'
+                                : 'text-dim'
                           }
                         />
                       </div>
@@ -217,8 +217,8 @@ export default function NotificationPanel() {
                         n.severity === 'critical'
                           ? 'bg-red-950/40 text-red-400'
                           : n.severity === 'warning'
-                            ? 'bg-yellow-950/40 text-yellow-400'
-                            : 'bg-cyan-950/40 text-cyan-400'
+                            ? 'bg-panel-2 text-white'
+                            : 'bg-panel-2 text-white'
                       }`}>
                         {SEV[n.severity].label}
                       </span>

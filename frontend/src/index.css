@@ -1,69 +1,267 @@
 @import "tailwindcss";
 
-/* Sharp Edged Plasma palette overrides (Tailwind v4) */
+/* TECHMINES portfolio tokens exposed as Tailwind v4 utilities (bg-panel, border-line, font-display...) */
 @theme {
-  --color-red-400: #FF3B3B;
-  --color-red-500: #FF0000;
-  --color-red-600: #DC2626;
-  --color-orange-400: #FF7A45;
-  --color-orange-500: #FF5F1F;
-  --color-cyan-300: #66FFFF;
-  --color-cyan-400: #00FFFF;
-  --color-cyan-500: #00E5E5;
+  --color-panel: #0E0E0E;
+  --color-panel-2: #171717;
+  --color-line: #2E2E2E;
+  --color-stroke: #4D4D4D;
+  --color-dim: #A9A9A9;
+  --color-body: #E2E2E2;
+  --color-red-400: #FF4D4D;
+  --color-red-500: #FF2626;
+  --color-red-600: #F5141F;
   --color-green-400: #39FF14;
   --color-green-500: #32E012;
-  --color-emerald-400: #39FF14;
-  --color-emerald-500: #32E012;
+  --font-display: 'Chakra Petch', 'Arial Narrow', sans-serif;
+  --font-sans: 'IBM Plex Sans', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, Menlo, monospace;
   --radius-xs: 0px; --radius-sm: 0px; --radius-md: 0px; --radius-lg: 0px;
   --radius-xl: 0px; --radius-2xl: 0px; --radius-3xl: 0px; --radius-4xl: 0px;
 }
 
-/* High-contrast glowing edges on interactive focus/hover */
-button:focus-visible, a:focus-visible, input:focus, select:focus, textarea:focus {
-  outline: none;
-  border-color: #FF0000 !important;
-  box-shadow: 0 0 0 1px #FF0000, 0 0 14px rgba(255, 0, 0, 0.55) !important;
-}
-input, select, textarea { background-color: #050505; color: #FFFFFF; }
-select option { background: #000000; color: #FFFFFF; }
-
-
-
-*, *::before, *::after {
-  border-radius: 0px !important;
-}
+/* ============================================================================
+   TECHMINES shared theme — mirrors the portfolio at techmines.github.io (dark).
+   Black, white and greys with ONE red. Chakra Petch / IBM Plex Sans / JetBrains Mono.
+   Source of truth: brand/tm-theme.css in the workspace. Edit there, then copy the
+   block into each project so all five stay identical.
+   ============================================================================ */
 
 :root {
-  --bg-primary: #000000;
-  --bg-secondary: #050505;
-  --bg-surface: rgba(5, 5, 5, 0.95);
-  --text-primary: #ffffff;
-  --text-secondary: rgba(243, 244, 244, 0.82);
-  --text-muted: rgba(243, 244, 244, 0.52);
-  --border-soft: rgba(255, 0, 0, 0.25);
-  --border-strong: rgba(255, 0, 0, 0.85);
-  --accent: #FF0000;
-  --accent-strong: #DC2626;
-  --cyber-orange: #FF5F1F;
-  --cyber-cyan: #00FFFF;
-  --cyber-green: #39FF14;
-  --shadow-soft: 0 10px 30px rgba(0, 0, 0, 0.95);
-  --shadow-glow: 0 0 15px rgba(255, 0, 0, 0.5);
+  --tm-bg:        #000000;
+  --tm-bg-2:      #080808;
+  --tm-panel:     #0E0E0E;
+  --tm-panel-2:   #171717;
+  --tm-line:      #2E2E2E;
+  --tm-stroke:    #4D4D4D;
+  --tm-text:      #FFFFFF;
+  --tm-body:      #E2E2E2;
+  --tm-dim:       #A9A9A9;
+  --tm-red:       #FF2626;
+  --tm-red-2:     #F5141F;
+  --tm-on-red:    #000000;
+  --tm-green:     #39FF14;
+  --tm-grid:      rgba(255, 255, 255, 0.07);
+  --tm-glow:      rgba(255, 38, 38, 0.55);
+  --tm-lift:      0 0 0 1px var(--tm-red), 0 18px 50px -12px var(--tm-glow);
+
+  --tm-font-display: 'Chakra Petch', 'Arial Narrow', sans-serif;
+  --tm-font-body:    'IBM Plex Sans', system-ui, sans-serif;
+  --tm-font-mono:    'JetBrains Mono', ui-monospace, Menlo, monospace;
+  --tm-ease:         cubic-bezier(0.2, 0.7, 0.2, 1);
+
+  color-scheme: dark;
 }
 
+/* Sharp corners everywhere, on purpose */
+*,
+*::before,
+*::after {
+  border-radius: 0 !important;
+}
 
-html { background: #000000; }
+html {
+  background: var(--tm-bg);
+}
+
+/* The body stays see-through so the fixed backdrop below shows behind every page */
+body {
+  background: transparent !important;
+  color: var(--tm-body);
+  font-family: var(--tm-font-body);
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4 {
+  font-family: var(--tm-font-display);
+  color: var(--tm-text);
+  letter-spacing: 0.01em;
+}
+
+button {
+  font-family: var(--tm-font-display);
+  letter-spacing: 0.04em;
+}
+
+code, pre, kbd, samp {
+  font-family: var(--tm-font-mono);
+}
+
+::selection {
+  background: var(--tm-red);
+  color: var(--tm-on-red);
+}
+
+:focus-visible {
+  outline: 3px solid var(--tm-red);
+  outline-offset: 2px;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  outline: none;
+  border-color: var(--tm-red) !important;
+  box-shadow: 0 0 0 1px var(--tm-red) !important;
+}
+
+select option {
+  background: var(--tm-bg);
+  color: var(--tm-text);
+}
+
+/* ---- Backdrop: faint grid that fades at the edges, plus red light drifting on both sides */
+body::before,
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+}
+
+body::before {
+  background-image:
+    linear-gradient(var(--tm-grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--tm-grid) 1px, transparent 1px);
+  background-size: 56px 56px;
+  -webkit-mask-image: radial-gradient(ellipse 90% 80% at 55% 35%, #000 20%, transparent 85%);
+  mask-image: radial-gradient(ellipse 90% 80% at 55% 35%, #000 20%, transparent 85%);
+}
+
+body::after {
+  background:
+    radial-gradient(42vw 42vw at 112% -8%, rgba(255, 38, 38, 0.34), transparent 70%),
+    radial-gradient(42vw 42vw at -14% 108%, rgba(245, 20, 31, 0.30), transparent 70%);
+  animation: tm-drift 18s ease-in-out infinite alternate;
+}
+
+@keyframes tm-drift {
+  to { transform: translate3d(0, 6vh, 0) scale(1.12); }
+}
+
+/* ---- Scrollbars */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--tm-stroke) var(--tm-bg);
+}
+
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: var(--tm-bg); }
+::-webkit-scrollbar-thumb { background: var(--tm-line); border: 0; }
+::-webkit-scrollbar-thumb:hover { background: var(--tm-red); box-shadow: none; }
+
+/* ---- Buttons: outlined by default, lift with a hard red shadow on hover */
+.tm-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.7rem 1.3rem;
+  border: 2px solid var(--tm-text);
+  background: transparent;
+  color: var(--tm-text);
+  font-family: var(--tm-font-display);
+  font-weight: 700;
+  font-size: 0.9rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  text-decoration: none;
+  cursor: pointer;
+  transition: transform 0.2s var(--tm-ease), box-shadow 0.2s var(--tm-ease), background-color 0.2s ease, color 0.2s ease;
+}
+
+.tm-btn:hover:not(:disabled) {
+  transform: translate(-3px, -3px);
+  box-shadow: 5px 5px 0 var(--tm-red);
+}
+
+.tm-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.tm-btn--solid {
+  background: linear-gradient(120deg, var(--tm-red), var(--tm-red-2));
+  border-color: transparent;
+  color: var(--tm-on-red);
+  box-shadow: 0 10px 30px -10px var(--tm-glow);
+}
+
+.tm-btn--solid:hover:not(:disabled) {
+  box-shadow: 5px 5px 0 var(--tm-text);
+}
+
+/* ---- Cards: slightly see-through panel, red edge and glow on hover */
+.tm-card {
+  border: 1px solid var(--tm-line);
+  background: color-mix(in srgb, var(--tm-panel) 74%, transparent);
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
+  transition: transform 0.3s var(--tm-ease), border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.tm-card:hover {
+  border-color: var(--tm-red);
+  box-shadow: var(--tm-lift);
+}
+
+/* ---- Small mono label, as used above each portfolio section */
+.tm-label {
+  font-family: var(--tm-font-mono);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--tm-dim);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body::after { animation: none; }
+  .tm-btn, .tm-card { transition: none; }
+  .tm-btn:hover:not(:disabled) { transform: none; }
+}
+
+/* ---- Brand bar and footer (shared across every project) */
+.tm-brandbar,
+.tm-brandfooter {
+  background: color-mix(in srgb, var(--tm-bg) 80%, transparent);
+  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(16px);
+}
+
+/* Underlined link with a red arrow, as on the portfolio */
+.tm-textlink {
+  text-decoration: underline;
+  text-decoration-color: var(--tm-red);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 5px;
+}
+
+.tm-textlink::after {
+  content: " \2197";
+  color: var(--tm-red);
+}
+
+/* Legacy AutoLine variables, now pointing at the shared tokens */
+:root {
+  --bg-primary: var(--tm-bg);
+  --bg-secondary: var(--tm-bg-2);
+  --bg-surface: color-mix(in srgb, var(--tm-panel) 82%, transparent);
+  --text-primary: var(--tm-text);
+  --text-secondary: var(--tm-body);
+  --text-muted: var(--tm-dim);
+  --border-soft: var(--tm-line);
+  --border-strong: var(--tm-red);
+  --accent: var(--tm-red);
+  --accent-strong: var(--tm-red);
+  --shadow-soft: none;
+  --shadow-glow: var(--tm-lift);
+}
 
 body {
   margin: 0;
   min-height: 100vh;
-  color: var(--text-primary);
-  font-family: "Outfit", "Segoe UI", sans-serif;
-  background:
-    radial-gradient(circle at top left, rgba(255, 0, 0, 0.2), transparent 35%),
-    radial-gradient(circle at bottom right, rgba(255, 95, 31, 0.12), transparent 35%),
-    #000000;
-  background-attachment: fixed;
 }
 
 * {
@@ -74,18 +272,11 @@ body {
   min-height: 100vh;
 }
 
-button,
-input,
-select,
-textarea {
-  font: inherit;
-}
-
 .app-shell {
   min-height: 100vh;
   background:
     linear-gradient(135deg, rgba(0, 0, 0, 0.96), rgba(15, 0, 0, 0.94)),
-    linear-gradient(180deg, rgba(255, 0, 0, 0.06), transparent);
+    linear-gradient(180deg, rgba(255,38,38, 0.06), transparent);
   color: var(--text-primary);
 }
 
@@ -93,7 +284,7 @@ textarea {
   flex: 1;
   min-height: calc(100vh - 2.75rem);
   background:
-    radial-gradient(circle at top, rgba(255, 0, 0, 0.08), transparent 30%),
+    radial-gradient(circle at top, rgba(255,38,38, 0.08), transparent 30%),
     transparent;
 }
 
@@ -120,7 +311,7 @@ textarea {
 .navbar-shell-solid {
   background: rgba(0, 0, 0, 0.75);
   backdrop-filter: blur(20px);
-  border-bottom: 1px solid rgba(255, 0, 0, 0.35);
+  border-bottom: 1px solid rgba(255,38,38, 0.35);
   box-shadow: 0 12px 36px rgba(0, 0, 0, 0.18);
 }
 
@@ -133,10 +324,10 @@ textarea {
   gap: 1rem;
   padding: 0.95rem 1.15rem;
   background: rgba(0, 0, 0, 0.38);
-  border: 1px solid rgba(255, 0, 0, 0.35); box-shadow: 0 0 15px rgba(255, 0, 0, 0.25);
+  border: 1px solid rgba(255,38,38, 0.35); box-shadow: 0 0 15px rgba(255,38,38, 0.25);
   border-radius: 0px !important;
   backdrop-filter: blur(18px);
-  box-shadow: 0 0 18px rgba(255, 0, 0, 0.25), 0 12px 40px rgba(0, 0, 0, 0.6);
+  box-shadow: 0 0 18px rgba(255,38,38, 0.25), 0 12px 40px rgba(0, 0, 0, 0.6);
 }
 
 .navbar-brand {
@@ -155,8 +346,8 @@ textarea {
   justify-content: center;
   border-radius: 0px !important;
   color: #f3f4f4;
-  background: linear-gradient(145deg, rgba(255, 0, 0, 0.95), rgba(15, 0, 0, 0.95));
-  box-shadow: 0 18px 30px rgba(255, 0, 0, 0.2);
+  background: linear-gradient(145deg, rgba(255,38,38, 0.95), rgba(15, 0, 0, 0.95));
+  box-shadow: 0 18px 30px rgba(255,38,38, 0.2);
 }
 
 .navbar-brand-title,
@@ -212,7 +403,7 @@ textarea {
   bottom: 0.35rem;
   height: 2px;
   border-radius: 0px !important;
-  background: linear-gradient(90deg, rgba(255, 0, 0, 0), rgba(255, 0, 0, 1), rgba(255, 0, 0, 0));
+  background: linear-gradient(90deg, rgba(255,38,38, 0), rgba(255,38,38, 1), rgba(255,38,38, 0));
   transform: scaleX(0);
   transform-origin: center;
   transition: transform 0.25s ease;
@@ -242,7 +433,7 @@ textarea {
   gap: 0.65rem;
   padding: 0.6rem 0.8rem;
   border-radius: 0px !important;
-  border: 1px solid rgba(255, 0, 0, 0.35); box-shadow: 0 0 15px rgba(255, 0, 0, 0.25);
+  border: 1px solid rgba(255,38,38, 0.35); box-shadow: 0 0 15px rgba(255,38,38, 0.25);
   background: rgba(255, 255, 255, 0.04);
 }
 
@@ -267,7 +458,7 @@ textarea {
   width: 2.4rem;
   height: 2.4rem;
   border-radius: 0px !important;
-  border: 1px solid rgba(255, 0, 0, 0.35); box-shadow: 0 0 15px rgba(255, 0, 0, 0.25);
+  border: 1px solid rgba(255,38,38, 0.35); box-shadow: 0 0 15px rgba(255,38,38, 0.25);
   background: rgba(255, 255, 255, 0.04);
   color: rgba(243, 244, 244, 0.75);
   transition: background 0.25s ease, color 0.25s ease, transform 0.25s ease;
@@ -275,7 +466,7 @@ textarea {
 
 .icon-button:hover,
 .icon-button-active {
-  background: rgba(255, 0, 0, 0.18);
+  background: rgba(255,38,38, 0.18);
   color: #f3f4f4;
   transform: translateY(-1px);
 }
@@ -301,9 +492,9 @@ textarea {
 }
 
 .sidebar-shell .nav-link-active {
-  background: linear-gradient(135deg, rgba(255, 0, 0, 0.92), rgba(15, 0, 0, 0.95));
+  background: linear-gradient(135deg, rgba(255,38,38, 0.92), rgba(15, 0, 0, 0.95));
   color: var(--bg-primary);
-  box-shadow: 0 12px 24px rgba(255, 0, 0, 0.24);
+  box-shadow: 0 12px 24px rgba(255,38,38, 0.24);
 }
 
 .sidebar-shell .nav-link-idle {
@@ -342,9 +533,9 @@ textarea {
   min-height: calc(100vh - 8rem);
   border-radius: 0px !important;
   overflow: hidden;
-  border: 1px solid rgba(255, 0, 0, 0.35); box-shadow: 0 0 15px rgba(255, 0, 0, 0.25);
+  border: 1px solid rgba(255,38,38, 0.35); box-shadow: 0 0 15px rgba(255,38,38, 0.25);
   background:
-    radial-gradient(circle at top, rgba(255, 0, 0, 0.1), transparent 38%),
+    radial-gradient(circle at top, rgba(255,38,38, 0.1), transparent 38%),
     linear-gradient(145deg, rgba(0, 0, 0, 0.92), rgba(5, 5, 5, 0.84));
   box-shadow: var(--shadow-soft);
 }
@@ -359,7 +550,7 @@ textarea {
 .home-hero-overlay {
   background:
     linear-gradient(180deg, rgba(0, 0, 0, 0.12), rgba(0, 0, 0, 0.78)),
-    radial-gradient(circle at center, rgba(255, 0, 0, 0.18), transparent 42%);
+    radial-gradient(circle at center, rgba(255,38,38, 0.18), transparent 42%);
 }
 
 .home-hero-content {
@@ -426,7 +617,7 @@ textarea {
   width: 100%;
   padding: 1rem 1.1rem;
   border-radius: 0px !important;
-  border: 1px solid rgba(255, 0, 0, 0.35); box-shadow: 0 0 15px rgba(255, 0, 0, 0.25);
+  border: 1px solid rgba(255,38,38, 0.35); box-shadow: 0 0 15px rgba(255,38,38, 0.25);
   background: rgba(255, 255, 255, 0.04);
   color: #f3f4f4;
   text-align: left;
@@ -436,8 +627,8 @@ textarea {
 
 .home-route-card:hover {
   transform: translateY(-3px);
-  border-color: rgba(255, 0, 0, 0.32);
-  background: rgba(255, 0, 0, 0.12);
+  border-color: rgba(255,38,38, 0.32);
+  background: rgba(255,38,38, 0.12);
 }
 
 .home-route-icon {
@@ -447,7 +638,7 @@ textarea {
   align-items: center;
   justify-content: center;
   border-radius: 0px !important;
-  background: linear-gradient(145deg, rgba(255, 0, 0, 0.92), rgba(15, 0, 0, 0.92));
+  background: linear-gradient(145deg, rgba(255,38,38, 0.92), rgba(15, 0, 0, 0.92));
   color: #f3f4f4;
   flex-shrink: 0;
 }
@@ -475,15 +666,15 @@ textarea {
   padding: 1.25rem;
   border-radius: 0px !important;
   background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 0, 0, 0.35); box-shadow: 0 0 15px rgba(255, 0, 0, 0.25);
+  border: 1px solid rgba(255,38,38, 0.35); box-shadow: 0 0 15px rgba(255,38,38, 0.25);
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
   transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 .home-feature-card:hover {
   transform: translateY(-4px);
-  border-color: rgba(255, 0, 0, 0.28);
-  box-shadow: 0 0 0 1px rgba(255, 0, 0, 0.14), 0 20px 34px rgba(0, 0, 0, 0.18);
+  border-color: rgba(255,38,38, 0.28);
+  box-shadow: 0 0 0 1px rgba(255,38,38, 0.14), 0 20px 34px rgba(0, 0, 0, 0.18);
 }
 
 .home-feature-card h3 {
@@ -507,7 +698,7 @@ textarea {
   justify-content: center;
   border-radius: 0px !important;
   color: #f3f4f4;
-  background: linear-gradient(145deg, rgba(255, 0, 0, 0.92), rgba(15, 0, 0, 0.92));
+  background: linear-gradient(145deg, rgba(255,38,38, 0.92), rgba(15, 0, 0, 0.92));
 }
 
 .hero-shell {
@@ -517,7 +708,7 @@ textarea {
   padding: 2rem;
   background:
     linear-gradient(145deg, rgba(0, 0, 0, 0.84), rgba(15, 0, 0, 0.72)),
-    radial-gradient(circle at top right, rgba(255, 0, 0, 0.22), transparent 28%);
+    radial-gradient(circle at top right, rgba(255,38,38, 0.22), transparent 28%);
 }
 
 .hero-grid {
@@ -547,8 +738,8 @@ textarea {
   width: 5px;
   height: 70%;
   border-radius: 0px !important;
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0), rgba(255, 0, 0, 0.95), rgba(255, 255, 255, 0));
-  box-shadow: 0 0 24px rgba(255, 0, 0, 0.45);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0), rgba(255,38,38, 0.95), rgba(255, 255, 255, 0));
+  box-shadow: 0 0 24px rgba(255,38,38, 0.45);
   animation: beamFloat 7s ease-in-out infinite;
 }
 
@@ -563,7 +754,7 @@ textarea {
   padding: 0.45rem 0.8rem;
   border-radius: 0px !important;
   background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 0, 0, 0.35); box-shadow: 0 0 15px rgba(255, 0, 0, 0.25);
+  border: 1px solid rgba(255,38,38, 0.35); box-shadow: 0 0 15px rgba(255,38,38, 0.25);
   color: var(--accent-strong);
   font-size: 0.72rem;
   font-weight: 700;
@@ -621,7 +812,7 @@ textarea {
   background: var(--accent);
   color: var(--bg-primary);
   border: 1px solid transparent;
-  box-shadow: 0 14px 28px rgba(255, 0, 0, 0.18);
+  box-shadow: 0 14px 28px rgba(255,38,38, 0.18);
 }
 
 .action-button:hover {
@@ -657,9 +848,9 @@ textarea {
 
 .filter-button.active,
 .filter-button:hover {
-  background: rgba(255, 0, 0, 0.2);
+  background: rgba(255,38,38, 0.2);
   color: var(--text-primary);
-  border-color: rgba(255, 0, 0, 0.32);
+  border-color: rgba(255,38,38, 0.32);
 }
 
 .toolbar-shell input,
@@ -676,7 +867,7 @@ textarea {
   width: 100%;
   color: var(--text-primary);
   background: rgba(0, 0, 0, 0.92);
-  border: 1px solid rgba(255, 0, 0, 0.55);
+  border: 1px solid rgba(255,38,38, 0.55);
   border-radius: 0px !important;
 }
 
@@ -700,7 +891,7 @@ textarea {
 .auth-card textarea:focus {
   outline: none;
   border-color: var(--accent);
-  box-shadow: 0 0 0 3px rgba(255, 0, 0, 0.2);
+  box-shadow: 0 0 0 3px rgba(255,38,38, 0.2);
 }
 
 .form-shell label,
@@ -725,7 +916,7 @@ textarea {
 .data-table th,
 .table-shell th {
   color: rgba(243, 244, 244, 0.68);
-  border-bottom: 1px solid rgba(255, 0, 0, 0.35);
+  border-bottom: 1px solid rgba(255,38,38, 0.35);
   letter-spacing: 0.14em;
 }
 
@@ -736,7 +927,7 @@ textarea {
 
 .data-table tbody tr:hover,
 .table-shell tbody tr:hover {
-  background: rgba(255, 0, 0, 0.09) !important;
+  background: rgba(255,38,38, 0.09) !important;
 }
 
 .data-table td,
@@ -747,7 +938,7 @@ textarea {
 
 .chart-tooltip {
   background: rgba(0, 0, 0, 0.96);
-  border: 1px solid rgba(255, 0, 0, 0.42);
+  border: 1px solid rgba(255,38,38, 0.42);
   border-radius: 0px !important;
   color: var(--text-primary);
   box-shadow: var(--shadow-soft);
@@ -756,7 +947,7 @@ textarea {
 .auth-shell {
   min-height: 100vh;
   background:
-    radial-gradient(circle at top left, rgba(255, 0, 0, 0.18), transparent 24%),
+    radial-gradient(circle at top left, rgba(255,38,38, 0.18), transparent 24%),
     linear-gradient(135deg, #000000, #050505);
 }
 
@@ -818,7 +1009,7 @@ textarea {
     gap: 0.5rem;
     border-radius: 0px !important;
     background: rgba(0, 0, 0, 0.88);
-    border: 1px solid rgba(255, 0, 0, 0.35); box-shadow: 0 0 15px rgba(255, 0, 0, 0.25);
+    border: 1px solid rgba(255,38,38, 0.35); box-shadow: 0 0 15px rgba(255,38,38, 0.25);
     backdrop-filter: blur(18px);
   }
 }
@@ -887,4 +1078,255 @@ textarea {
   50% {
     transform: translate3d(0, 108vh, 0) scaleY(calc(1.12 + var(--beam-scale)));
   }
+}
+
+/* ===========================================================================
+   AutoLine components on the shared TECHMINES theme.
+   These come last so they win over the older rules above.
+   =========================================================================== */
+.app-shell,
+.app-main,
+.auth-shell {
+  background: transparent;
+}
+
+.surface-panel,
+.section-card,
+.table-shell,
+.toolbar-shell,
+.form-shell,
+.settings-tile,
+.metric-card,
+.hero-shell,
+.auth-card,
+.home-route-card,
+.home-feature-card {
+  border: 1px solid var(--tm-line);
+  background: color-mix(in srgb, var(--tm-panel) 82%, transparent);
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
+  box-shadow: none;
+}
+
+.metric-card:hover,
+.section-card:hover,
+.settings-tile:hover,
+.home-route-card:hover,
+.home-feature-card:hover {
+  transform: translateY(-3px);
+  border-color: var(--tm-red);
+  box-shadow: var(--tm-lift);
+}
+
+.metric-card::before {
+  width: 3px;
+  background: var(--tm-red);
+}
+
+/* Small mono label above headings, as on the portfolio */
+.eyebrow {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+  color: var(--tm-red);
+  font-family: var(--tm-font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.16em;
+}
+
+.industrial-heading,
+.page-title,
+.home-title {
+  font-family: var(--tm-font-display);
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  text-shadow: none;
+}
+
+.home-hero {
+  border: 1px solid var(--tm-line);
+  background: color-mix(in srgb, var(--tm-panel) 60%, transparent);
+  box-shadow: none;
+}
+
+.home-hero-overlay {
+  background: linear-gradient(180deg, transparent, rgba(0, 0, 0, 0.7));
+}
+
+.home-tagline {
+  font-family: var(--tm-font-mono);
+  font-size: 0.8rem;
+  letter-spacing: 0.16em;
+  color: var(--tm-dim);
+}
+
+/* Buttons */
+.action-button,
+.secondary-button {
+  font-family: var(--tm-font-display);
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  transition: transform 0.2s var(--tm-ease), box-shadow 0.2s var(--tm-ease);
+}
+
+.action-button {
+  border: 2px solid transparent;
+  background: linear-gradient(120deg, var(--tm-red), var(--tm-red-2));
+  color: var(--tm-on-red);
+  box-shadow: 0 10px 30px -10px var(--tm-glow);
+}
+
+.action-button:hover {
+  background: linear-gradient(120deg, var(--tm-red), var(--tm-red-2));
+  color: var(--tm-on-red);
+  transform: translate(-3px, -3px);
+  box-shadow: 5px 5px 0 var(--tm-text);
+}
+
+.secondary-button {
+  border: 2px solid var(--tm-text);
+  background: transparent;
+  color: var(--tm-text);
+}
+
+.secondary-button:hover {
+  background: transparent;
+  border-color: var(--tm-text);
+  transform: translate(-3px, -3px);
+  box-shadow: 5px 5px 0 var(--tm-red);
+}
+
+.ghost-button:hover {
+  background: transparent;
+  border-color: var(--tm-red);
+  color: var(--tm-red);
+  transform: none;
+}
+
+.filter-button {
+  border: 1px solid var(--tm-line);
+  background: var(--tm-bg);
+  color: var(--tm-body);
+  font-family: var(--tm-font-mono);
+}
+
+.filter-button:hover {
+  border-color: var(--tm-red);
+  background: var(--tm-bg);
+  color: var(--tm-text);
+}
+
+.filter-button.active {
+  border-color: var(--tm-red);
+  background: var(--tm-red);
+  color: var(--tm-on-red);
+}
+
+/* Form fields */
+.toolbar-shell input,
+.toolbar-shell select,
+.toolbar-shell textarea,
+.form-shell input,
+.form-shell select,
+.form-shell textarea,
+.table-shell input,
+.table-shell select,
+.auth-card input,
+.auth-card select,
+.auth-card textarea {
+  border: 1px solid var(--tm-line);
+  background: var(--tm-bg);
+}
+
+/* Navigation */
+.navbar-shell-solid {
+  border-bottom: 0;
+  background: transparent;
+  box-shadow: none;
+  backdrop-filter: none;
+}
+
+.navbar-inner {
+  border: 1px solid var(--tm-line);
+  background: color-mix(in srgb, var(--tm-bg) 80%, transparent);
+  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(16px);
+  box-shadow: none;
+}
+
+.navbar-brand-mark {
+  background: transparent;
+  box-shadow: none;
+}
+
+.navbar-brand-title {
+  font-family: var(--tm-font-display);
+  font-weight: 700;
+  font-size: 1.2rem;
+  letter-spacing: 0.03em;
+}
+
+.navbar-brand-subtitle {
+  font-family: var(--tm-font-mono);
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  color: var(--tm-red);
+}
+
+.nav-pill {
+  font-family: var(--tm-font-display);
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--tm-body);
+}
+
+.nav-pill::after {
+  left: 0.78rem;
+  right: 0.78rem;
+  bottom: 0.2rem;
+  height: 3px;
+  background: var(--tm-red);
+  transform-origin: left;
+}
+
+.nav-pill:hover,
+.nav-pill-active {
+  background: transparent;
+  color: var(--tm-text);
+  transform: none;
+}
+
+.icon-button:hover,
+.icon-button-active {
+  border-color: var(--tm-red);
+  color: var(--tm-red);
+}
+
+/* Tables and charts */
+.data-table thead tr,
+.table-shell thead tr {
+  background: var(--tm-panel-2);
+}
+
+.data-table th,
+.table-shell th {
+  border-bottom: 1px solid var(--tm-line);
+  color: var(--tm-dim);
+  font-family: var(--tm-font-mono);
+  letter-spacing: 0.1em;
+}
+
+.data-table tbody tr:hover,
+.table-shell tbody tr:hover {
+  background: var(--tm-panel-2) !important;
+}
+
+.chart-tooltip {
+  border: 1px solid var(--tm-red);
+  background: var(--tm-bg);
+  box-shadow: none;
 }

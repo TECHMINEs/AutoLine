@@ -86,7 +86,7 @@ export default function BulkOrder() {
   return (
     <div className="space-y-5 mt-10">
       {toast && (
-        <div className={`toast-shell fixed top-4 right-4 z-50 px-4 py-3 rounded-lg text-sm text-white flex items-center gap-3 ${toast.type === 'error' ? 'bg-[rgba(255,0,0,0.86)]' : 'bg-[rgba(255, 0, 0,0.86)]'}`}>
+        <div className={`toast-shell fixed top-4 right-4 z-50 px-4 py-3 rounded-lg text-sm text-white flex items-center gap-3 ${toast.type === 'error' ? 'bg-[rgba(255,38,38,0.86)]' : 'bg-[rgba(255,38,38,0.86)]'}`}>
           {toast.msg}
           <button onClick={() => setToast(null)}><X size={14}/></button>
         </div>
@@ -119,7 +119,7 @@ export default function BulkOrder() {
               <div className="overflow-x-auto max-h-[480px] overflow-y-auto">
                 <table className="w-full text-sm data-table">
                   <thead className="sticky top-0 z-10">
-                    <tr className="border-b border-red-900/40">
+                    <tr className="border-b border-line">
                       <th className="px-4 py-2.5 text-left text-xs font-semibold text-neutral-500 uppercase">Part</th>
                       <th className="px-4 py-2.5 text-left text-xs font-semibold text-neutral-500 uppercase">Category</th>
                       <th className="px-4 py-2.5 text-left text-xs font-semibold text-neutral-500 uppercase">Unit Price</th>
@@ -127,23 +127,23 @@ export default function BulkOrder() {
                       <th className="px-4 py-2.5 text-center text-xs font-semibold text-neutral-500 uppercase">Add</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-red-900/30">
+                  <tbody className="divide-y divide-line">
                     {filtered.length === 0 ? (
                       <tr><td colSpan={5} className="px-4 py-8 text-center text-neutral-400">No parts found.</td></tr>
                     ) : filtered.map(p => (
-                      <tr key={p[0]} className={`transition-colors ${inCart(p[0]) ? 'bg-cyan-950/40' : 'hover:bg-[#0a0a0a]'}`}>
+                      <tr key={p[0]} className={`transition-colors ${inCart(p[0]) ? 'bg-panel-2' : 'hover:bg-[#0a0a0a]'}`}>
                         <td className="px-4 py-3">
                           <p className="font-medium text-neutral-100">{p[1]}</p>
                           <p className="text-xs text-neutral-400">{p[2]}</p>
                         </td>
                         <td className="px-4 py-3">
-                          <span className="px-2 py-0.5 bg-orange-950/40 text-black font-bold rounded text-xs">{p[3]}</span>
+                          <span className="px-2 py-0.5 bg-panel-2 text-black font-bold rounded text-xs">{p[3]}</span>
                         </td>
                         <td className="px-4 py-3 font-semibold text-neutral-200">₹{Number(p[4]).toLocaleString('en-IN')}</td>
                         <td className="px-4 py-3 text-neutral-400">{Number(p[5]).toLocaleString('en-IN')}</td>
                         <td className="px-4 py-3 text-center">
                           {inCart(p[0])
-                            ? <span className="inline-flex items-center gap-1 text-xs text-cyan-600 font-medium"><CheckCircle2 size={14}/> Added</span>
+                            ? <span className="inline-flex items-center gap-1 text-xs text-dim font-medium"><CheckCircle2 size={14}/> Added</span>
                             : <button onClick={() => addToCart(p)}
                                 className="action-button px-3 py-1 text-xs font-semibold">
                                 + Add
@@ -163,9 +163,9 @@ export default function BulkOrder() {
         <div className="space-y-3">
           <div className="section-card overflow-hidden">
             <div className="px-4 py-3 border-b border-[rgba(255,255,255,0.08)] flex items-center gap-2">
-              <ShoppingCart size={16} className="text-[#FF0000]" />
+              <ShoppingCart size={16} className="text-[#FF2626]" />
               <p className="text-sm font-semibold text-[#F3F4F4]">Order Cart</p>
-              <span className="ml-auto bg-[rgba(255, 0, 0,0.16)] text-[#FF0000] text-xs px-2 py-0.5 rounded-full border border-[rgba(255, 0, 0,0.22)]">{cart.length} items</span>
+              <span className="ml-auto bg-[rgba(255,38,38,0.16)] text-[#FF2626] text-xs px-2 py-0.5 rounded-full border border-[rgba(255,38,38,0.22)]">{cart.length} items</span>
             </div>
 
             {cart.length === 0 ? (
@@ -207,7 +207,7 @@ export default function BulkOrder() {
             <div className="p-4 border-t border-[rgba(255,255,255,0.08)] space-y-3">
               <div className="flex items-center justify-between">
                 <p className="text-sm font-semibold text-neutral-200">Total Cost</p>
-                <p className="text-lg font-bold text-cyan-600">₹{totalCost.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</p>
+                <p className="text-lg font-bold text-dim">₹{totalCost.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</p>
               </div>
               <button
                 onClick={handleSubmitOrder}
