@@ -119,7 +119,7 @@ export default function Models() {
   return (
     <div className="space-y-4 mt-10">
       {toast && (
-        <div className={`toast-shell fixed top-4 right-4 z-50 px-4 py-3 rounded-lg text-sm text-white flex items-center gap-3 ${toast.type === 'error' ? 'bg-[rgba(255,0,0,0.86)]' : 'bg-[rgba(255, 0, 0,0.86)]'}`}>
+        <div className={`toast-shell fixed top-4 right-4 z-50 px-4 py-3 rounded-lg text-sm text-white flex items-center gap-3 ${toast.type === 'error' ? 'bg-[rgba(255,38,38,0.86)]' : 'bg-[rgba(255,38,38,0.86)]'}`}>
           {toast.msg}
           <button onClick={() => setToast(null)}><X size={14} /></button>
         </div>
@@ -147,7 +147,7 @@ export default function Models() {
               <input required value={form.model_name}
                 onChange={e => setForm(f => ({ ...f, model_name: e.target.value }))}
                 placeholder="e.g. Swift Dzire"
-                className="w-full border border-red-900/40 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-cyan-400"
+                className="w-full border border-line rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-stroke"
               />
             </div>
             <div>
@@ -155,14 +155,14 @@ export default function Models() {
               <input value={form.model_code}
                 onChange={e => setForm(f => ({ ...f, model_code: e.target.value }))}
                 placeholder="e.g. SD-01"
-                className="w-full border border-red-900/40 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-cyan-400"
+                className="w-full border border-line rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-stroke"
               />
             </div>
             <div>
               <label className="block text-xs font-medium text-neutral-400 mb-1">Model Type</label>
               <select value={form.model_type}
                 onChange={e => setForm(f => ({ ...f, model_type: e.target.value }))}
-                className="w-full border border-red-900/40 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-cyan-400"
+                className="w-full border border-line rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-stroke"
               >
                 <option value="">Select type…</option>
                 {MODEL_TYPES.map(t => <option key={t} value={t}>{t}</option>)}
@@ -173,14 +173,14 @@ export default function Models() {
               <input type="number" min={0} value={form.base_price}
                 onChange={e => setForm(f => ({ ...f, base_price: e.target.value }))}
                 placeholder="e.g. 850000"
-                className="w-full border border-red-900/40 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-cyan-400"
+                className="w-full border border-line rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-stroke"
               />
             </div>
             <div>
               <label className="block text-xs font-medium text-neutral-400 mb-1">Active</label>
               <select value={form.isactive}
                 onChange={e => setForm(f => ({ ...f, isactive: e.target.value }))}
-                className="w-full border border-red-900/40 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-cyan-400"
+                className="w-full border border-line rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-stroke"
               >
                 <option value="Y">Yes</option>
                 <option value="N">No</option>
@@ -191,12 +191,12 @@ export default function Models() {
               <input value={form.description}
                 onChange={e => setForm(f => ({ ...f, description: e.target.value }))}
                 placeholder="Optional"
-                className="w-full border border-red-900/40 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-cyan-400"
+                className="w-full border border-line rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-stroke"
               />
             </div>
             <div className="sm:col-span-2 lg:col-span-3 flex justify-end">
               <button type="submit" disabled={submitting}
-                className="px-6 py-2 bg-cyan-600 text-white text-sm rounded-lg hover:bg-cyan-700 disabled:opacity-50 transition">
+                className="tm-btn tm-btn--solid disabled:opacity-50">
                 {submitting ? 'Saving…' : 'Save Model'}
               </button>
             </div>
@@ -216,19 +216,19 @@ export default function Models() {
           <div className="overflow-x-auto">
             <table className="w-full text-sm data-table">
               <thead>
-                <tr className="bg-[#0a0a0a] border-b border-red-900/40">
+                <tr className="bg-[#0a0a0a] border-b border-line">
                   {['ID', 'Name', 'Code', 'Type', 'Base Price', 'Status', 'Actions'].map(h => (
                     <th key={h} className="px-4 py-3 text-left text-xs font-semibold text-neutral-500 uppercase tracking-wide whitespace-nowrap">{h}</th>
                   ))}
                 </tr>
               </thead>
-              <tbody className="divide-y divide-red-900/30">
+              <tbody className="divide-y divide-line">
                 {rows.length === 0 ? (
                   <tr><td colSpan={7} className="px-4 py-10 text-center text-neutral-400">No models found.</td></tr>
                 ) : rows.map((r, i) => {
                   const isEditing = editId === r[0];
                   return (
-                    <tr key={i} className={`transition-colors ${isEditing ? 'bg-cyan-950/40' : 'hover:bg-[#0a0a0a]'}`}>
+                    <tr key={i} className={`transition-colors ${isEditing ? 'bg-panel-2' : 'hover:bg-[#0a0a0a]'}`}>
                       <td className="px-4 py-2 font-mono text-xs text-neutral-400">{r[0]}</td>
 
                       {isEditing ? (
@@ -266,7 +266,7 @@ export default function Models() {
                           <td className="px-4 py-3 font-medium text-white">{r[1]}</td>
                           <td className="px-4 py-3 font-mono text-xs text-neutral-500">{r[4] || '—'}</td>
                           <td className="px-4 py-3">
-                            {r[2] ? <span className="px-2 py-0.5 bg-orange-950/40 text-orange-400 rounded text-xs">{r[2]}</span> : '—'}
+                            {r[2] ? <span className="px-2 py-0.5 bg-panel-2 text-white rounded text-xs">{r[2]}</span> : '—'}
                           </td>
                           <td className="px-4 py-3 text-neutral-200">{r[3] ? `₹${Number(r[3]).toLocaleString('en-IN')}` : '—'}</td>
                           <td className="px-4 py-3">
@@ -277,7 +277,7 @@ export default function Models() {
                           <td className="px-4 py-3">
                            {can('canEdit') && (
                             <button onClick={() => startEdit(r)}
-                              className="flex items-center gap-1 px-2 py-1 border border-red-900/40 text-neutral-400 text-xs rounded-lg hover:bg-[#0a0a0a] transition">
+                              className="flex items-center gap-1 px-2 py-1 border border-line text-neutral-400 text-xs rounded-lg hover:bg-[#0a0a0a] transition">
                               <Pencil size={12} /> Edit
                             </button>
                             )}

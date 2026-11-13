@@ -2,11 +2,11 @@ import { TrendingUp, TrendingDown } from 'lucide-react';
 
 export default function StatCard({ title, value, subtitle, trend, icon: Icon, color = 'blue' }) {
   const colorMap = {
-    blue: { bg: 'bg-[rgba(255, 0, 0,0.14)]', icon: 'text-[#FF0000]', border: 'border-[rgba(255, 0, 0,0.22)]' },
+    blue: { bg: 'bg-[rgba(255,38,38,0.14)]', icon: 'text-[#FF2626]', border: 'border-[rgba(255,38,38,0.22)]' },
     green: { bg: 'bg-[rgba(57,255,20,0.16)]', icon: 'text-[#39FF14]', border: 'border-[rgba(57,255,20,0.26)]' },
-    red: { bg: 'bg-[rgba(255,0,0,0.16)]', icon: 'text-[#FF0000]', border: 'border-[rgba(255,0,0,0.26)]' },
-    yellow: { bg: 'bg-[rgba(255,95,31,0.16)]', icon: 'text-[#FF5F1F]', border: 'border-[rgba(255,95,31,0.24)]' },
-    purple: { bg: 'bg-[rgba(0,255,255,0.16)]', icon: 'text-[#00FFFF]', border: 'border-[rgba(0,255,255,0.24)]' },
+    red: { bg: 'bg-[rgba(255,38,38,0.16)]', icon: 'text-[#FF2626]', border: 'border-[rgba(255,38,38,0.26)]' },
+    yellow: { bg: 'bg-[rgba(169,169,169,0.16)]', icon: 'text-white', border: 'border-[rgba(169,169,169,0.24)]' },
+    purple: { bg: 'bg-[rgba(255,255,255,0.16)]', icon: 'text-white', border: 'border-[rgba(255,255,255,0.24)]' },
   };
 
   const c = colorMap[color] || colorMap.blue;
@@ -14,7 +14,7 @@ export default function StatCard({ title, value, subtitle, trend, icon: Icon, co
   const trendEl = trend === 'UP'
     ? <span className="flex items-center gap-1 text-xs text-[#39FF14] font-medium"><TrendingUp size={12} /> UP</span>
     : trend === 'DOWN'
-      ? <span className="flex items-center gap-1 text-xs text-[#FF0000] font-medium"><TrendingDown size={12} /> DOWN</span>
+      ? <span className="flex items-center gap-1 text-xs text-[#FF2626] font-medium"><TrendingDown size={12} /> DOWN</span>
       : null;
 
   return (

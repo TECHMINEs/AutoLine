@@ -15,7 +15,7 @@ const OP_ICONS = {
 const OP_COLORS = {
   ADD:      'bg-green-950/40 text-green-400 border-green-500/40',
   SUBTRACT: 'bg-red-950/40   text-red-400   border-red-500/40',
-  SET:      'bg-yellow-950/40 text-yellow-400 border-yellow-500/40',
+  SET:      'bg-panel-2 text-white border-stroke',
 };
 
 export default function BulkStockUpdate() {
@@ -106,7 +106,7 @@ export default function BulkStockUpdate() {
   return (
     <div className="space-y-5 mt-10">
       {toast && (
-        <div className={`toast-shell fixed top-4 right-4 z-50 px-4 py-3 rounded-lg text-sm text-white flex items-center gap-3 ${toast.type === 'error' ? 'bg-[rgba(255,0,0,0.86)]' : 'bg-[rgba(255, 0, 0,0.86)]'}`}>
+        <div className={`toast-shell fixed top-4 right-4 z-50 px-4 py-3 rounded-lg text-sm text-white flex items-center gap-3 ${toast.type === 'error' ? 'bg-[rgba(255,38,38,0.86)]' : 'bg-[rgba(255,38,38,0.86)]'}`}>
           {toast.msg}
           <button onClick={() => setToast(null)}><X size={14}/></button>
         </div>
@@ -117,7 +117,7 @@ export default function BulkStockUpdate() {
       {/* ─── Pending Banner ─── */}
       {pendingList.length > 0 && (
         <div className="section-card px-5 py-3 flex items-center justify-between">
-          <div className="flex items-center gap-2 text-[#FF0000] text-sm font-medium">
+          <div className="flex items-center gap-2 text-[#FF2626] text-sm font-medium">
             <CheckCircle2 size={16} />
             {pendingList.length} part(s) staged for update
           </div>
@@ -155,7 +155,7 @@ export default function BulkStockUpdate() {
       <div className="flex items-center gap-4 text-xs text-[rgba(243,244,244,0.58)]">
         <div className="flex items-center gap-1"><span className="w-3 h-3 rounded-full bg-green-400 inline-block"/> ADD — increases current stock</div>
         <div className="flex items-center gap-1"><span className="w-3 h-3 rounded-full bg-red-400 inline-block"/>   SUBTRACT — decreases current stock</div>
-        <div className="flex items-center gap-1"><span className="w-3 h-3 rounded-full bg-yellow-400 inline-block"/> SET — replaces stock with entered value</div>
+        <div className="flex items-center gap-1"><span className="w-3 h-3 rounded-full bg-white inline-block"/> SET — replaces stock with entered value</div>
       </div>
 
       {/* ─── Table ─── */}
@@ -164,7 +164,7 @@ export default function BulkStockUpdate() {
           <div className="overflow-x-auto">
             <table className="w-full text-sm data-table">
               <thead>
-                <tr className="bg-[#0a0a0a] border-b border-red-900/40">
+                <tr className="bg-[#0a0a0a] border-b border-line">
                   <th className="px-4 py-3 text-left text-xs font-semibold text-neutral-500 uppercase">Part</th>
                   <th className="px-4 py-3 text-left text-xs font-semibold text-neutral-500 uppercase">Category</th>
                   <th className="px-4 py-3 text-center text-xs font-semibold text-neutral-500 uppercase">Current Stock</th>
@@ -174,7 +174,7 @@ export default function BulkStockUpdate() {
                   <th className="px-4 py-3 text-center text-xs font-semibold text-neutral-500 uppercase">Clear</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-red-900/30">
+              <tbody className="divide-y divide-line">
                 {filtered.length === 0 ? (
                   <tr><td colSpan={7} className="px-4 py-10 text-center text-neutral-400">No parts found.</td></tr>
                 ) : filtered.map(p => {
@@ -184,17 +184,17 @@ export default function BulkStockUpdate() {
                   const hasUpdate = upd && upd.type;
 
                   return (
-                    <tr key={pid} className={`transition-colors ${hasUpdate ? 'bg-cyan-950/40' : 'hover:bg-[#0a0a0a]'}`}>
+                    <tr key={pid} className={`transition-colors ${hasUpdate ? 'bg-panel-2' : 'hover:bg-[#0a0a0a]'}`}>
                       <td className="px-4 py-3">
                         <p className="font-medium text-neutral-100">{p[1]}</p>
                         <p className="text-xs text-neutral-400">{p[2]}</p>
                       </td>
                       <td className="px-4 py-3">
-                        <span className="px-2 py-0.5 bg-orange-950/40 text-black font-bold rounded text-xs">{p[3]}</span>
+                        <span className="px-2 py-0.5 bg-panel-2 text-black font-bold rounded text-xs">{p[3]}</span>
                       </td>
                       <td className="px-4 py-3 text-center font-semibold text-neutral-200">
                         {Number(p[5]).toLocaleString('en-IN')}
-                        {p[5] < p[6] && p[5] > 0 && <span className="ml-1 text-yellow-500 text-xs">(LOW)</span>}
+                        {p[5] < p[6] && p[5] > 0 && <span className="ml-1 text-white text-xs">(LOW)</span>}
                         {p[5] === 0 && <span className="ml-1 text-red-500 text-xs">(OUT)</span>}
                       </td>
 
@@ -208,7 +208,7 @@ export default function BulkStockUpdate() {
                               className={`flex items-center gap-1 px-2 py-1 rounded-md text-xs font-medium border transition ${
                                 upd?.type === op
                                   ? OP_COLORS[op] + ' ring-1 ring-offset-1 ring-current'
-                                  : 'border-red-900/40 text-neutral-500 hover:border-red-900/40'
+                                  : 'border-line text-neutral-500 hover:border-line'
                               }`}
                             >
                               {OP_ICONS[op]} {op}
@@ -233,7 +233,7 @@ export default function BulkStockUpdate() {
                       {/* Preview */}
                       <td className="px-4 py-3 text-center">
                         {preview !== null ? (
-                          <span className={`font-semibold text-sm ${preview < p[6] ? 'text-yellow-600' : preview === 0 ? 'text-red-600' : 'text-green-600'}`}>
+                          <span className={`font-semibold text-sm ${preview < p[6] ? 'text-white' : preview === 0 ? 'text-red-600' : 'text-green-600'}`}>
                             → {Number(preview).toLocaleString('en-IN')}
                           </span>
                         ) : <span className="text-neutral-300 text-xs">—</span>}

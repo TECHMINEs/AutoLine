@@ -166,7 +166,7 @@ export default function Dashboard() {
                 borderRadius: 0,
                 fontSize: 13,
                 background: 'rgba(5,5,5,0.96)',
-                border: '1px solid rgba(255, 0, 0,0.42)',
+                border: '1px solid rgba(255,38,38,0.42)',
                 color: '#F3F4F4',
               }}
               formatter={(v) => [v.toLocaleString('en-IN'), 'Units']}
@@ -175,9 +175,9 @@ export default function Dashboard() {
             <Line
               type="monotone"
               dataKey="units"
-              stroke="#FF0000"
+              stroke="#FF2626"
               strokeWidth={3}
-              dot={{ r: 6, fill: '#FF0000' }}
+              dot={{ r: 6, fill: '#FF2626' }}
               activeDot={{ r: 8, fill: '#F3F4F4' }}
             />
           </LineChart>
@@ -192,12 +192,12 @@ export default function Dashboard() {
         </div>
         <div className="section-card p-5">
           <p className="text-xs text-[rgba(243,244,244,0.6)] font-medium uppercase tracking-[0.18em] mb-1">Today</p>
-          <p className="text-3xl font-bold text-[#FF0000]">{Number(stats.trend.today).toLocaleString('en-IN')}</p>
+          <p className="text-3xl font-bold text-[#FF2626]">{Number(stats.trend.today).toLocaleString('en-IN')}</p>
           <p className="text-xs text-[rgba(243,244,244,0.48)] mt-1">Units produced</p>
         </div>
-        <div className={`section-card p-5 ${trendDir === 'UP' ? 'border-[rgba(57,255,20,0.24)]' : 'border-[rgba(255,0,0,0.24)]'}`}>
+        <div className={`section-card p-5 ${trendDir === 'UP' ? 'border-[rgba(57,255,20,0.24)]' : 'border-[rgba(255,38,38,0.24)]'}`}>
           <p className="text-xs text-[rgba(243,244,244,0.6)] font-medium uppercase tracking-[0.18em] mb-1">Change</p>
-          <p className={`text-3xl font-bold ${trendDir === 'UP' ? 'text-[#39FF14]' : 'text-[#FF0000]'}`}>
+          <p className={`text-3xl font-bold ${trendDir === 'UP' ? 'text-[#39FF14]' : 'text-[#FF2626]'}`}>
             {trendDir === 'UP' ? '+' : '-'}{Math.abs(Number(stats.trend.trend)).toFixed(2)}%
           </p>
           <p className="text-xs text-[rgba(243,244,244,0.48)] mt-1">vs previous day</p>

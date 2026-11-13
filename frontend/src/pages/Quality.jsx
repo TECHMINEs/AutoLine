@@ -114,7 +114,7 @@ export default function Quality() {
   return (
     <div className="space-y-5 mt-10">
       {toast && (
-        <div className={`toast-shell fixed top-4 right-4 z-50 px-4 py-3 rounded-lg text-sm text-white flex items-center gap-3 ${toast.type === 'error' ? 'bg-[rgba(255,0,0,0.86)]' : 'bg-[rgba(255, 0, 0,0.86)]'}`}>
+        <div className={`toast-shell fixed top-4 right-4 z-50 px-4 py-3 rounded-lg text-sm text-white flex items-center gap-3 ${toast.type === 'error' ? 'bg-[rgba(255,38,38,0.86)]' : 'bg-[rgba(255,38,38,0.86)]'}`}>
           {toast.msg}
           <button onClick={() => setToast(null)}><X size={14} /></button>
         </div>
@@ -134,7 +134,7 @@ export default function Quality() {
       {showForm && (
         <div className="form-shell p-6">
           <div className="flex items-center gap-2 mb-4">
-            <FlaskConical size={18} className="text-[#FF0000]" />
+            <FlaskConical size={18} className="text-[#FF2626]" />
             <h2 className="font-semibold text-[#F3F4F4] industrial-heading tracking-[0.12em]">New Quality Test Entry</h2>
           </div>
           <form onSubmit={handleSubmit} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -222,7 +222,7 @@ export default function Quality() {
             {form.cars_tested && form.cars_passed && (
               <div className="sm:col-span-2 lg:col-span-3">
                 <div className={`rounded-lg px-4 py-2.5 text-sm font-medium flex items-center gap-3 ${
-                  passRate(form.cars_passed, form.cars_tested) >= 95 ? 'section-card text-[#39FF14]' : 'section-card text-[#FF5F1F]'
+                  passRate(form.cars_passed, form.cars_tested) >= 95 ? 'section-card text-[#39FF14]' : 'section-card text-white'
                 }`}>
                   Pass Rate Preview:&nbsp;<strong>{passRate(form.cars_passed, form.cars_tested)}%</strong>
                   <span className="text-xs font-normal opacity-70">
@@ -263,13 +263,13 @@ export default function Quality() {
           <div className="overflow-x-auto">
             <table className="w-full text-sm data-table">
               <thead>
-                <tr className="bg-[#0a0a0a] border-b border-red-900/40">
+                <tr className="bg-[#0a0a0a] border-b border-line">
                   {['ID', 'Date', 'Line', 'Model', 'Tested', 'Passed', 'Failed', 'Defect %', 'Shift'].map(h => (
                     <th key={h} className="px-4 py-3 text-left text-xs font-semibold text-neutral-500 uppercase tracking-wide whitespace-nowrap">{h}</th>
                   ))}
                 </tr>
               </thead>
-              <tbody className="divide-y divide-red-900/30">
+              <tbody className="divide-y divide-line">
                 {rows.length === 0 ? (
                   <tr><td colSpan={9} className="px-4 py-10 text-center text-neutral-400">No quality tests found.</td></tr>
                 ) : rows.map((r, i) => {
@@ -292,16 +292,16 @@ export default function Quality() {
                         {defect !== null ? (
                           <span className={`px-2 py-0.5 rounded-full text-xs font-semibold ${
                             Number(defect) > 10 ? 'bg-red-950/40 text-red-400'
-                            : Number(defect) > 5 ? 'bg-yellow-950/40 text-yellow-400'
+                            : Number(defect) > 5 ? 'bg-panel-2 text-white'
                             : 'bg-green-950/40 text-green-400'
                           }`}>{defect}%</span>
                         ) : '—'}
                       </td>
                       <td className="px-4 py-3">
                         <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${
-                          r[10] === 'Morning' ? 'bg-yellow-950/40 text-yellow-400'
-                          : r[10] === 'Afternoon' ? 'bg-orange-950/40 text-orange-400'
-                          : 'bg-cyan-950/40 text-cyan-400'
+                          r[10] === 'Morning' ? 'bg-panel-2 text-white'
+                          : r[10] === 'Afternoon' ? 'bg-panel-2 text-white'
+                          : 'bg-panel-2 text-white'
                         }`}>{r[10]}</span>
                       </td>
                     </tr>

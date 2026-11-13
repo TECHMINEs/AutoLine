@@ -11,7 +11,7 @@ export default function Sidebar() {
   return (
     <aside className="h-full flex flex-col sidebar-shell text-white w-64 shadow-xl">
       <div className="flex flex-col items-center gap-3 px-5 py-5 border-b border-[rgba(255,255,255,0.08)]">
-        <div className="w-9 h-9 rounded-lg bg-[#FF0000] flex items-center justify-center flex-shrink-0 shadow-[0_10px_20px_rgba(255, 0, 0,0.24)]">
+        <div className="w-9 h-9 rounded-lg bg-[#FF2626] flex items-center justify-center flex-shrink-0 shadow-[0_10px_20px_rgba(255,38,38,0.24)]">
           <Factory size={20} className="text-white" />
         </div>
         <div>

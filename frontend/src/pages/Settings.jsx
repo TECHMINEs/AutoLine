@@ -8,18 +8,18 @@ const cards = [
     label: 'Employees',
     desc: 'View and manage factory employees',
     icon: Users,
-    color: 'text-cyan-600',
-    bg: 'bg-cyan-950/40',
-    border: 'border-cyan-500/40',
+    color: 'text-dim',
+    bg: 'bg-panel-2',
+    border: 'border-stroke',
   },
   {
     to: '/settings/models',
     label: 'Car Models',
     desc: 'View active car models in the system',
     icon: Car,
-    color: 'text-orange-600',
-    bg: 'bg-orange-950/40',
-    border: 'border-orange-500/40',
+    color: 'text-white',
+    bg: 'bg-panel-2',
+    border: 'border-stroke',
   },
   {
     to: '/settings/lines',
@@ -52,7 +52,7 @@ export default function Settings() {
             <div className={`w-11 h-11 rounded-lg ${bg} flex items-center justify-center mb-4`}>
               <Icon size={22} className={color} />
             </div>
-            <p className="font-semibold text-[#F3F4F4] text-base group-hover:text-[#FF0000] transition-colors">
+            <p className="font-semibold text-[#F3F4F4] text-base group-hover:text-[#FF2626] transition-colors">
             {label}
             </p>
             <p className="text-sm text-[rgba(243,244,244,0.58)] mt-1">{desc}</p>
