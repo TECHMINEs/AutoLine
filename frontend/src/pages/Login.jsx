@@ -26,7 +26,7 @@ export default function Login() {
     <div className="auth-shell flex items-center justify-center p-4">
       <div className="w-full max-w-sm">
         <div className="text-center mb-8">
-          <img src="/logo-mark.svg" alt="AutoLine logo" width={72} height={72} className="w-[72px] h-[72px] mx-auto mb-4" />
+          <img src={`${import.meta.env.BASE_URL}logo-mark.svg`} alt="AutoLine logo" width={72} height={72} className="w-[72px] h-[72px] mx-auto mb-4" />
           <h1 className="text-4xl font-bold text-white uppercase industrial-heading">Auto<span className="text-[#FF2626]">Line</span></h1>
           <p className="tm-label mt-2">Manufacturing management system</p>
         </div>
@@ -82,6 +82,25 @@ export default function Login() {
               {loading ? 'Signing in...' : 'Sign In'}
             </button>
           </form>
+
+          <div className="mt-6 pt-5 border-t border-[rgba(243,244,244,0.08)]">
+            <button
+              type="button"
+              onClick={() => {
+                setUsername('admin');
+                setPassword('admin');
+                login('admin', 'admin').then((r) => {
+                  if (r.success) navigate('/home');
+                });
+              }}
+              className="w-full py-2.5 px-3 text-xs font-mono uppercase tracking-wider bg-[rgba(255,38,38,0.12)] text-[#FF2626] border border-[rgba(255,38,38,0.3)] hover:bg-[rgba(255,38,38,0.22)] transition-colors rounded font-semibold"
+            >
+              ✦ Quick Demo Access (Admin)
+            </button>
+            <p className="text-[11px] text-center text-[rgba(243,244,244,0.45)] mt-2 font-mono">
+              Client-side demo with bundled manufacturing data
+            </p>
+          </div>
 
           
         </div>

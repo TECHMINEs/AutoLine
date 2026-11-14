@@ -57,7 +57,7 @@ export default function Navbar() {
     <header className={`navbar-shell ${scrolled ? 'navbar-shell-solid' : ''}`}>
       <div className="navbar-inner">
         <NavLink to="/home" className="navbar-brand">
-          <img src="/logo-mark.svg" alt="AutoLine logo" width={42} height={42} className="navbar-brand-mark" />
+          <img src={`${import.meta.env.BASE_URL}logo-mark.svg`} alt="AutoLine logo" width={42} height={42} className="navbar-brand-mark" />
           <span>
             <span className="navbar-brand-title text-white">Auto<span className="text-[#FF2626]">Line</span></span>
             <span className="navbar-brand-subtitle">By TECHMINES</span>
