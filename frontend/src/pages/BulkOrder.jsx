@@ -76,7 +76,7 @@ export default function BulkOrder() {
     try {
       await downloadOrderPDF(cartItems());
       showToast('Invoice downloaded!');
-    } catch (e) {
+    } catch {
       showToast('Failed to download PDF.', 'error');
     } finally {
       setPdfLoading(false);
@@ -96,7 +96,7 @@ export default function BulkOrder() {
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
 
-        {/* ─── Parts Catalog ─── */}
+        {/* Parts Catalog */}
         <div className="lg:col-span-2 space-y-3">
           <div className="toolbar-shell p-4">
             <div className="relative">
@@ -159,7 +159,7 @@ export default function BulkOrder() {
           </div>
         </div>
 
-        {/* ─── Cart ─── */}
+        {/* Cart */}
         <div className="space-y-3">
           <div className="section-card overflow-hidden">
             <div className="px-4 py-3 border-b border-[rgba(255,255,255,0.08)] flex items-center gap-2">
@@ -203,7 +203,7 @@ export default function BulkOrder() {
               </div>
             )}
 
-            {/* ─── Total & Buttons ─── */}
+            {/* Total & Buttons */}
             <div className="p-4 border-t border-[rgba(255,255,255,0.08)] space-y-3">
               <div className="flex items-center justify-between">
                 <p className="text-sm font-semibold text-neutral-200">Total Cost</p>
@@ -233,7 +233,7 @@ export default function BulkOrder() {
             </div>
           </div>
 
-          {/* ─── Order Result ─── */}
+          {/* Order Result */}
           {orderResult && (
             <div className="section-card p-4 space-y-2">
               <div className="flex items-center gap-2 text-[#39FF14] font-semibold text-sm">

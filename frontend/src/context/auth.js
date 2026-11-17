@@ -10,7 +10,7 @@ export const ROLES = {
   OPERATOR: 'operator',
 };
 
-// Normalize whatever role string comes from DB → known role
+// Map the stored role string onto a known role.
 export const normalizeRole = (dbRole) => {
   if (!dbRole) return ROLES.OPERATOR;
   const r = dbRole.toLowerCase();

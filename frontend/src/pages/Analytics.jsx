@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useCallback } from 'react';
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid,
   Tooltip, ResponsiveContainer, Cell, Legend,
@@ -77,7 +77,7 @@ export default function Analytics() {
         subtitle="Defect rates broken down by production line and car model"
       />
 
-      {/* ─── Alert Summary ─── */}
+      {/* Alert Summary */}
       {(highDefectLines.length > 0 || highDefectModels.length > 0) && (
         <div className="section-card p-4">
           <div className="flex items-center gap-2 text-[#FF2626] font-semibold text-sm mb-2">
@@ -99,7 +99,7 @@ export default function Analytics() {
         </div>
       )}
 
-      {/* ─── Charts Row ─── */}
+      {/* Charts Row */}
       <div className="grid grid-cols-1 xl:grid-cols-2 gap-5">
 
         {/* By Line */}
@@ -190,7 +190,7 @@ export default function Analytics() {
         </div>
       </div>
 
-      {/* ─── Detail Tables ─── */}
+      {/* Detail Tables */}
       <div className="grid grid-cols-1 xl:grid-cols-2 gap-5">
 
         {/* Line table */}

@@ -16,7 +16,7 @@ async function getConnection() {
             await db.exec('BEGIN');
             inTransaction = true;
         },
-        execute: async (query, binds = {}, options = {}) => {
+        execute: async (query, binds = {}) => {
             let sqliteQuery = query;
             const sqliteBinds = {};
 
@@ -29,7 +29,6 @@ async function getConnection() {
                 }
             }
 
-            // Oracle to SQLite function translations
             sqliteQuery = sqliteQuery.replace(/NVL\(/gi, 'IFNULL(');
             sqliteQuery = sqliteQuery.replace(/TRUNC\(SYSDATE\)\s*-\s*(\d+)/gi, "DATE('now', '-$1 days')");
             sqliteQuery = sqliteQuery.replace(/TRUNC\(SYSDATE\)/gi, "DATE('now')");

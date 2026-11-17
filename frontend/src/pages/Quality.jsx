@@ -130,7 +130,7 @@ export default function Quality() {
         </button>
       </PageHeader>
 
-      {/* ─── Form ─── */}
+      {/* Form */}
       {showForm && (
         <div className="form-shell p-6">
           <div className="flex items-center gap-2 mb-4">
@@ -251,7 +251,7 @@ export default function Quality() {
         </div>
       )}
 
-      {/* ─── History Table ─── */}
+      {/* History Table */}
       <div className="table-shell">
         <div className="px-5 py-3 border-b border-[rgba(255,255,255,0.08)] flex items-center justify-between">
           <p className="font-semibold text-[#F3F4F4] text-sm">Test History</p>

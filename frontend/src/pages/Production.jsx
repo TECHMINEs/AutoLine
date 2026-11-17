@@ -32,7 +32,6 @@ export default function Production() {
   const [models,    setModels]    = useState([]);
   const [employees, setEmployees] = useState([]);
 
-  // Sort
   const [sortCol,  setSortCol]  = useState(1); // index
   const [sortDir,  setSortDir]  = useState('desc');
 
@@ -137,7 +136,7 @@ export default function Production() {
         </button>
       </PageHeader>
 
-      {/* ─── Add Form ─── */}
+      {/* Add Form */}
       {showForm && (
         <div className="form-shell p-6">
           <h2 className="font-semibold text-[#F3F4F4] mb-4 industrial-heading tracking-[0.12em]">New Production Entry</h2>
@@ -216,7 +215,7 @@ export default function Production() {
         </div>
       )}
 
-      {/* ─── Search ─── */}
+      {/* Search */}
       <div className="toolbar-shell p-4">
         <div className="flex items-center gap-3">
           <div className="relative flex-1 max-w-xs">
@@ -238,7 +237,7 @@ export default function Production() {
         </div>
       </div>
 
-      {/* ─── Table ─── */}
+      {/* Table */}
       <div className="table-shell">
         {loading ? <LoadingSpinner />
         : error   ? <ErrorAlert message={error} onRetry={() => fetchRows(search)} />

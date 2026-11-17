@@ -177,7 +177,7 @@ export default function PartsUsage() {
         </div>
       )}
 
-      {/* ─── Table ─── */}
+      {/* Table */}
       <div className="table-shell">
         {loading ? <LoadingSpinner />
         : error   ? <ErrorAlert message={error} onRetry={fetchRows} />

@@ -29,7 +29,6 @@ export default function Employees() {
   const [lines,      setLines]      = useState([]);
   const { can } = useAuth();
 
-  // editing
   const [editId,   setEditId]   = useState(null);
   const [editForm, setEditForm] = useState({});
   const [saving,   setSaving]   = useState(false);
@@ -62,7 +61,7 @@ export default function Employees() {
     fetchRows(v);
   };
 
-  // ─── Add ───
+  // Add
   const handleSubmit = async (e) => {
     e.preventDefault();
     setSubmitting(true);
@@ -88,7 +87,7 @@ export default function Employees() {
     }
   };
 
-  // ─── Edit ───
+  // Edit
   const startEdit = (r) => {
     setEditId(r[0]);
     setEditForm({
@@ -124,7 +123,6 @@ export default function Employees() {
     }
   };
 
-  // shared input style
   const inp = 'px-2 py-1 text-xs w-full';
 
   return (
@@ -152,7 +150,7 @@ export default function Employees() {
         </button>
       </PageHeader>
 
-      {/* ─── Add Form ─── */}
+      {/* Add Form */}
       {showForm && (
         <div className="form-shell p-6">
           <h2 className="font-semibold text-[#F3F4F4] mb-4 industrial-heading tracking-[0.12em]">New Employee</h2>
@@ -235,7 +233,7 @@ export default function Employees() {
         </div>
       )}
 
-      {/* ─── Search ─── */}
+      {/* Search */}
       <div className="toolbar-shell p-4">
         <div className="flex items-center gap-3">
           <div className="relative flex-1 max-w-xs">
@@ -254,7 +252,7 @@ export default function Employees() {
         </div>
       </div>
 
-      {/* ─── Table ─── */}
+      {/* Table */}
       <div className="table-shell">
         {loading ? <LoadingSpinner />
         : error   ? <ErrorAlert message={error} onRetry={() => fetchRows(search)} />

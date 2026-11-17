@@ -5,7 +5,6 @@ const {getConnection} = require('../db');
 const settingsRouter = express.Router();
 
 
-//get productionlines-
 settingsRouter.get('/lines', async (req,res)=> {
     try {
          const connection = await getConnection()
@@ -20,7 +19,6 @@ settingsRouter.get('/lines', async (req,res)=> {
    
 })
 
-//post productionlines--
 settingsRouter.post('/lines', async (req,res)=> {
     try {
         const { line_name, line_type, status, daily_capacity}=req.body;
@@ -45,7 +43,6 @@ settingsRouter.post('/lines', async (req,res)=> {
    
 })
 
-//get models
 
 settingsRouter.get('/models', async (req, res)=> {
     try {
@@ -71,7 +68,6 @@ settingsRouter.get('/models', async (req, res)=> {
 
 })
 
-//post models
 settingsRouter.post('/models' ,async (req,res)=>{
     try {
         const {model_name, model_type, base_price, model_code, description, isactive} = req.body;
@@ -94,7 +90,6 @@ settingsRouter.post('/models' ,async (req,res)=>{
 
 
 
-//get parts
 settingsRouter.get('/parts', async (req, res)=> {
     try {
         const connection= await getConnection();
@@ -117,10 +112,9 @@ settingsRouter.get('/parts', async (req, res)=> {
 
 })
 
-//post parts
 settingsRouter.post('/parts' ,async (req,res)=>{
     try {
-        const {part_name, part_code, part_category, unit_price, stock_quantity, min_stock_level,supplier_name,description} = req.body;
+        const {part_name, part_code, part_category, unit_price, stock_quantity, min_stock_level} = req.body;
         const connection= await getConnection();
         await connection.execute(`insert into parts (PART_ID, PART_NAME, PART_CODE, PART_CATEGORY, UNIT_PRICE, STOCK_QUANTITY, MIN_STOCK_LEVEL, LAST_UPDATED) SELECT NVL((SELECT MAX(part_id) FROM parts), 0) + 1, :part_name, :part_code, :part_category, :unit_price, :stock_quantity, :min_stock_level, SYSDATE FROM DUAL`, {
             part_name, part_code, part_category, unit_price, stock_quantity, min_stock_level
@@ -133,7 +127,6 @@ settingsRouter.post('/parts' ,async (req,res)=>{
         sendServerError(res, 'Error while inserting parts details', err);}
 })
 
-//get employees
 
 settingsRouter.get('/employees', async (req, res) => {
     let connection;
@@ -152,7 +145,7 @@ settingsRouter.get('/employees', async (req, res) => {
 
         let binds = {};
 
-        // searching by name 
+        // Search by name.
         if (req.query.search) {
             query += ` AND LOWER(employee_name) LIKE :search`;
             binds.search = `%${req.query.search.toLowerCase()}%`;
@@ -189,7 +182,6 @@ settingsRouter.post('/employees' ,async (req,res)=>{
         sendServerError(res, 'Error while inserting employees details', err);}})
         
 
-// POST /login
 settingsRouter.post('/auth/login', async (req, res) => {
   let connection;
   try {
@@ -265,7 +257,6 @@ settingsRouter.post('/auth/login', async (req, res) => {
   }
 });
 
-// get defect categories
 
 settingsRouter.get('/defectcategory', async (req,res)=> {
     try {
@@ -280,7 +271,6 @@ settingsRouter.get('/defectcategory', async (req,res)=> {
     }
 
 })
-// PUT employees
 settingsRouter.put('/employees/:id', async (req, res) => {
   let connection;
   try {
@@ -312,7 +302,6 @@ settingsRouter.put('/employees/:id', async (req, res) => {
   }
 });
 
-// PUT models
 settingsRouter.put('/models/:id', async (req, res) => {
   let connection;
   try {
@@ -338,7 +327,6 @@ settingsRouter.put('/models/:id', async (req, res) => {
   }
 });
 
-// PUT lines
 settingsRouter.put('/lines/:id', async (req, res) => {
   let connection;
   try {

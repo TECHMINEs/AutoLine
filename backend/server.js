@@ -10,7 +10,6 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// API router mounted on /api
 const apiRouter = express.Router();
 apiRouter.use('/dashboard', require('./routes/dashboard'));
 apiRouter.use('/dropdown', require('./routes/dropdown'));
@@ -28,7 +27,6 @@ app.use('/', require('./routes/settings'));
 app.use('/', require('./routes/production'));
 app.use('/', require('./routes/parts'));
 
-// Serve built frontend if dist exists
 const distPath = path.join(__dirname, '../frontend/dist');
 if (fs.existsSync(distPath)) {
   app.use(express.static(distPath));

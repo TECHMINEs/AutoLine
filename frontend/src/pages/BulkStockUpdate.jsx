@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useCallback } from 'react';
 import { RefreshCw, Search, Plus, Minus, Settings, X, CheckCircle2 } from 'lucide-react';
 import PageHeader    from '../components/PageHeader';
 import LoadingSpinner from '../components/LoadingSpinner';
@@ -37,7 +37,7 @@ export default function BulkStockUpdate() {
     try {
       const r = await getParts();
       setParts(r.data);
-    } catch (e) {
+    } catch {
       showToast('Failed to load parts.', 'error');
     } finally {
       setLoading(false);
@@ -114,7 +114,7 @@ export default function BulkStockUpdate() {
 
       <PageHeader title="Bulk Stock Update" subtitle="Update stock quantities for multiple parts at once" />
 
-      {/* ─── Pending Banner ─── */}
+      {/* Pending Banner */}
       {pendingList.length > 0 && (
         <div className="section-card px-5 py-3 flex items-center justify-between">
           <div className="flex items-center gap-2 text-[#FF2626] text-sm font-medium">
@@ -132,7 +132,7 @@ export default function BulkStockUpdate() {
         </div>
       )}
 
-      {/* ─── Toolbar ─── */}
+      {/* Toolbar */}
       <div className="toolbar-shell p-4 flex items-center gap-3">
         <div className="relative flex-1 max-w-xs">
           <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-neutral-400" />
@@ -151,14 +151,14 @@ export default function BulkStockUpdate() {
         <p className="ml-auto text-xs text-[rgba(243,244,244,0.52)]">{filtered.length} parts shown</p>
       </div>
 
-      {/* ─── Legend ─── */}
+      {/* Legend */}
       <div className="flex items-center gap-4 text-xs text-[rgba(243,244,244,0.58)]">
         <div className="flex items-center gap-1"><span className="w-3 h-3 rounded-full bg-green-400 inline-block"/> ADD — increases current stock</div>
         <div className="flex items-center gap-1"><span className="w-3 h-3 rounded-full bg-red-400 inline-block"/>   SUBTRACT — decreases current stock</div>
         <div className="flex items-center gap-1"><span className="w-3 h-3 rounded-full bg-white inline-block"/> SET — replaces stock with entered value</div>
       </div>
 
-      {/* ─── Table ─── */}
+      {/* Table */}
       <div className="table-shell">
         {loading ? <LoadingSpinner /> : (
           <div className="overflow-x-auto">
@@ -256,7 +256,7 @@ export default function BulkStockUpdate() {
         )}
       </div>
 
-      {/* ─── Submit Button at Bottom ─── */}
+      {/* Submit Button at Bottom */}
       {pendingList.length > 0 && (
         <div className="flex justify-end">
           <button

@@ -3,7 +3,6 @@ const { sendServerError } = require('../utils/http');
     const {getConnection} = require('../db');
     const Qualityrouter = express.Router()
 
-    //posting in table QUALITY_TESTING
     Qualityrouter.post('/qualitytest', async (req,res)=> {
         try {
             const connection = await getConnection();

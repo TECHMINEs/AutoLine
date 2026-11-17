@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useCallback } from 'react';
 import {
   LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip,
   ResponsiveContainer, Legend,
@@ -79,24 +79,6 @@ export default function Dashboard() {
         <div className="hero-beams">
           {Array.from({ length: 12 }).map((_, idx) => <span key={idx} />)}
         </div>
-        {/* <div className="relative z-10 max-w-3xl flex flex-col gap-5">
-          <div className="eyebrow">Factory Intelligence</div>
-          <div>
-            <h1 className="text-4xl md:text-5xl text-[#F3F4F4] industrial-heading leading-tight mb-3">
-              Precision Automotive Parts
-            </h1>
-            <p className="text-base md:text-lg text-[rgba(243,244,244,0.72)] max-w-2xl">
-              Engineered for performance. Built for reliability.
-            </p>
-            <p className="text-sm text-[rgba(243,244,244,0.52)] mt-4 max-w-2xl">
-              Real-time production, inventory, and quality signals in one industrial command center.
-            </p>
-          </div>
-          <div className="flex flex-wrap gap-3">
-            <button className="action-button px-5 py-3 font-semibold">Explore Parts</button>
-            <div className="secondary-button px-4 py-3 text-sm">Live factory overview</div>
-          </div>
-        </div> */}
         <div className='flex justify-center items-center my-auto align-middle my-auto'>
           <div style={{ width: '100%', height: '100vh', position: 'absolute', top: 0 }}>
                       <Beams

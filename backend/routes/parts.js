@@ -3,7 +3,6 @@ const express = require("express")
 const partsusageRouter = express.Router();
 const {getConnection} = require('../db');
 
-// get parts usage
 partsusageRouter.get('/partsusage', async(req, res)=> {
 
     try {
@@ -19,7 +18,6 @@ partsusageRouter.get('/partsusage', async(req, res)=> {
     }
 })
 
-// post parts usage
 partsusageRouter.post('/partsusage', async(req, res)=> {
 
     try {
@@ -58,7 +56,6 @@ partsusageRouter.post('/partsusage', async(req, res)=> {
     }
 })
 
-//parts summary
 partsusageRouter.get('/parts/summary', async (req, res) => {
     let connection;
 
@@ -167,8 +164,7 @@ partsusageRouter.post('/parts/bulk-update', async (req, res) => {
     }
 });
 
-//calculate bill
-// NEW — calculates AND updates stock in DB
+// Prices the order and adds the ordered quantities to stock.
 partsusageRouter.post('/parts/order', async (req, res) => {
     let connection;
     try {
@@ -186,7 +182,6 @@ partsusageRouter.post('/parts/order', async (req, res) => {
         connection = await getConnection();
         await connection.begin();
 
-        // ADD ordered quantity to stock for each part
         for (const item of items) {
             await connection.execute(
                 `UPDATE PARTS

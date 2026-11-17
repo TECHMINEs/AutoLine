@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/auth';
 import { PlusCircle, X, Pencil, Check, Ban } from 'lucide-react';
@@ -54,7 +54,7 @@ export default function Models() {
 
   useLoadOnChange(fetchRows);
 
-  // ─── Add ───
+  // Add
   const handleSubmit = async (e) => {
     e.preventDefault();
     setSubmitting(true);
@@ -78,7 +78,7 @@ export default function Models() {
     }
   };
 
-  // ─── Edit ───
+  // Edit
   const startEdit = (r) => {
     setEditId(r[0]);
     setEditForm({
@@ -137,7 +137,7 @@ export default function Models() {
         </button>
       </PageHeader>
 
-      {/* ─── Add Form ─── */}
+      {/* Add Form */}
       {showForm && (
         <div className="form-shell p-6">
           <h2 className="font-semibold text-[#F3F4F4] mb-4 industrial-heading tracking-[0.12em]">New Car Model</h2>
@@ -204,7 +204,7 @@ export default function Models() {
         </div>
       )}
 
-      {/* ─── Table ─── */}
+      {/* Table */}
       <div className="table-shell">
         <div className="px-5 py-3 border-b border-[rgba(255,255,255,0.08)] flex items-center justify-between">
           <p className="text-sm font-semibold text-[#F3F4F4]">All Models</p>

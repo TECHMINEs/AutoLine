@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useCallback } from 'react';
 import { Search, X, Package, TrendingDown, AlertTriangle, DollarSign } from 'lucide-react';
 import PageHeader    from '../components/PageHeader';
 import LoadingSpinner from '../components/LoadingSpinner';
@@ -69,7 +69,7 @@ export default function Parts() {
     <div className="space-y-5 mt-10">
       <PageHeader title="Parts Inventory" subtitle="Monitor stock levels and parts data" />
 
-      {/* ─── Summary Cards ─── */}
+      {/* Summary Cards */}
       {summary && (
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
           <StatCard title="Total Parts"          value={summary.total_parts}                               icon={Package}       color="blue"   />
@@ -79,7 +79,7 @@ export default function Parts() {
         </div>
       )}
 
-      {/* ─── Filters + Search ─── */}
+      {/* Filters + Search */}
         <div className="toolbar-shell p-4">
         <div className="flex flex-wrap items-center gap-3">
           <div className="relative flex-1 min-w-48 max-w-xs">
@@ -116,7 +116,7 @@ export default function Parts() {
         </div>
       </div>
 
-      {/* ─── Table ─── */}
+      {/* Table */}
       <div className="table-shell">
         {loading ? <LoadingSpinner />
         : error   ? <ErrorAlert message={error} onRetry={() => fetchParts(search)} />

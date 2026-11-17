@@ -4,7 +4,6 @@ const express = require("express")
 const {getConnection} = require('../db');
 const productionRouter = express.Router();
 
-//get daily production
 
 productionRouter.get('/dailyproduction', async (req,res)=> {
     let connection;
@@ -51,10 +50,9 @@ productionRouter.get('/dailyproduction', async (req,res)=> {
 
 })
 
-// post daily production
 productionRouter.post('/dailyproduction', async (req,res)=> {
     try {
-        const { production_date,line_id,  model_id, quantity_produced,shift,supervisor_id, notes, created_by}=req.body;
+        const { production_date,line_id,  model_id, quantity_produced,shift,supervisor_id, notes}=req.body;
         const connection = await getConnection()
         await connection.execute(
             `DECLARE

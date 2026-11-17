@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { PlusCircle, X, Pencil, Check, Ban } from 'lucide-react';
 import PageHeader     from '../components/PageHeader';
@@ -51,7 +51,7 @@ export default function Lines() {
 
   useLoadOnChange(fetchRows);
 
-  // ─── Add ───
+  // Add
   const handleSubmit = async (e) => {
     e.preventDefault();
     setSubmitting(true);
@@ -73,7 +73,7 @@ export default function Lines() {
     }
   };
 
-  // ─── Edit ───
+  // Edit
   const startEdit = (r) => {
     setEditId(r[0]);
     setEditForm({
@@ -134,7 +134,7 @@ export default function Lines() {
         </button>
       </PageHeader>
 
-      {/* ─── Add Form ─── */}
+      {/* Add Form */}
       {showForm && (
         <div className="form-shell p-6">
           <h2 className="font-semibold text-[#F3F4F4] mb-4 industrial-heading tracking-[0.12em]">New Production Line</h2>
@@ -184,7 +184,7 @@ export default function Lines() {
         </div>
       )}
 
-      {/* ─── Table ─── */}
+      {/* Table */}
       <div className="table-shell">
         <div className="px-5 py-3 border-b border-[rgba(255,255,255,0.08)] flex items-center justify-between">
           <p className="text-sm font-semibold text-[#F3F4F4]">All Lines</p>

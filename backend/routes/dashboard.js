@@ -5,7 +5,6 @@ const express = require("express")
 const dashboardRouter = express.Router()
 
 
-//total production 
 
 dashboardRouter.get('/total-production', async (req, res) => {
     let connection;
@@ -29,7 +28,6 @@ dashboardRouter.get('/total-production', async (req, res) => {
     }
 });
 
-//total cost
 dashboardRouter.get('/total-cost', async (req, res) => {
     let connection;
 
@@ -52,7 +50,6 @@ dashboardRouter.get('/total-cost', async (req, res) => {
     }
 });
 
-//defect rate
 dashboardRouter.get('/defect-rate', async (req, res) => {
     let connection;
 
@@ -75,7 +72,7 @@ dashboardRouter.get('/defect-rate', async (req, res) => {
     }
 });
 
-//production trend,  needs today and yesterday entries!!
+// Production trend: compares today with yesterday.
 dashboardRouter.get('/production-trend', async (req, res) => {
     let connection;
 
